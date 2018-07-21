@@ -34,8 +34,8 @@ public class UserServices {
 		return userRepository.findUserByUser(username);
 	}
 	
-	public User checkTokenKey(String tokenKey) {
-		return userRepository.checkToken(tokenKey);
+	public User checkAuthKey(String authKey) {
+		return userRepository.checkAuthKey(authKey);
 	}
 	
 }

@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.google.gson.annotations.Expose;
+
 
 @Entity
 @Table(name="orders")
@@ -24,17 +26,21 @@ public class Order {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="order_id")
+	@Expose
 	private long id;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name="orderDate")
+	@Expose
 	private Date orderDate;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id")
+	@Expose
 	private User user;
 
 	@OneToMany(mappedBy="orderDetailID.order",cascade = CascadeType.ALL)
+	@Expose
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 	
 	public Order() {}

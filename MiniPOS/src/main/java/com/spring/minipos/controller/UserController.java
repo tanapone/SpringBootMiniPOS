@@ -1,5 +1,7 @@
 package com.spring.minipos.controller;
 
+import java.text.ParseException;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,33 +15,35 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.Message;
 import com.spring.minipos.entity.User;
 import com.spring.minipos.service.UserServices;
 
 @RestController
 @RequestMapping("/services")
-@CrossOrigin(origins="http://localhost:4200",allowedHeaders="*")
+@CrossOrigin(origins="*",allowedHeaders="*")
 public class UserController {
 	
+	Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 	@Autowired
 	UserServices userServices;
 	
 	@PostMapping("/create/user")
 	public String createUserAcc(@Valid @RequestBody User user,
-			@RequestParam(value="tokenKey" ,required=false) String tokenKey) {
+			@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
-		if(tokenKey == null) {
-			result = new Gson().toJson(new Message("Required token key."));
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
 		}else {
-			if(userServices.checkTokenKey(tokenKey)!=null) {
-				if(userServices.checkTokenKey(tokenKey).getUserType() == 1) {
-					result = new Gson().toJson(userServices.save(user));
+			if(userServices.checkAuthKey(authKey)!=null) {
+				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
+					result = gson.toJson(userServices.save(user));
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = gson.toJson(new Message("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong token key."));
+				result = gson.toJson(new Message("Wrong auth key."));
 			}
 		}
 		
@@ -47,19 +51,19 @@ public class UserController {
 	}
 	
 	@GetMapping("/users")
-	public String showAllUsers(@RequestParam(value="tokenKey" ,required=false) String tokenKey){
+	public String showAllUsers(@RequestParam(value="authKey" ,required=false) String authKey){
 		String result = null;
-		if(tokenKey == null) {
-			result = new Gson().toJson(new Message("Required token key."));
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
 		}else {
-			if(userServices.checkTokenKey(tokenKey)!=null) {
-				if(userServices.checkTokenKey(tokenKey).getUserType() == 1) {
-					result = new Gson().toJson(userServices.findAll());
+			if(userServices.checkAuthKey(authKey)!=null) {
+				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
+					result = gson.toJson(userServices.findAll());
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = gson.toJson(new Message("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong token key."));
+				result = gson.toJson(new Message("Wrong auth key."));
 			}
 		}
 		
@@ -69,28 +73,28 @@ public class UserController {
 	@GetMapping("/user/id/{id}")
 	public String findUserById(@PathVariable long id) {
 		if (userServices.findUserById(id) != null) {
-			return new Gson().toJson(userServices.findUserById(id));
+			return gson.toJson(userServices.findUserById(id));
 		}else {
-			return new Gson().toJson(new Message("User not found"));
+			return gson.toJson(new Message("User not found"));
 		}
 	}
 	
 	@GetMapping("/user/username/{username}")
 	public String findUserByUsername(@PathVariable String username,
-			@RequestParam(value="tokenKey" ,required=false) String tokenKey) {
+			@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		
-		if(tokenKey == null) {
-			result = new Gson().toJson(new Message("Required token key."));
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
 		}else {
-			if(userServices.checkTokenKey(tokenKey)!=null) {
-				if(userServices.checkTokenKey(tokenKey).getUserType() == 1) {
-					result = new Gson().toJson(userServices.findUserByUsername(username));
+			if(userServices.checkAuthKey(authKey)!=null) {
+				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
+					result = gson.toJson(userServices.findUserByUsername(username));
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = gson.toJson(new Message("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong token key."));
+				result = gson.toJson(new Message("Wrong auth key."));
 			}
 		}
 		return result;
@@ -100,14 +104,14 @@ public class UserController {
 	@PostMapping("/login")
 	public String checkLogin(@RequestBody User user) {
 		if(userServices.checkLogin(user.getUsername(), user.getPassword())!= null) {
-			return new Gson().toJson(userServices.checkLogin(user.getUsername(), user.getPassword()));
+			return gson.toJson(userServices.checkLogin(user.getUsername(), user.getPassword()));
 		}else {
-			return new Gson().toJson(new Message("Wrong username or password"));
+			return gson.toJson(new Message("Wrong username or password"));
 		}
 	}
 	
 	@GetMapping("/create/user/admin")
-	public String createAdminUser() {
+	public String createAdminUser() throws ParseException {
 		if(userServices.findAll().size()<1) {
 			User user = new User();
 			user.setUsername("admin");
@@ -118,9 +122,9 @@ public class UserController {
 			user.setUserType(1);
 			user.setEmail("tanapone58110@gmail.com");
 			user.setAddress("298/23");
-			return new Gson().toJson(userServices.save(user));
+			return gson.toJson(userServices.save(user));
 		}else {
-			return new Gson().toJson(new Message("Admin account already set."));
+			return gson.toJson(new Message("Admin account already set."));
 		}
 		
 	}

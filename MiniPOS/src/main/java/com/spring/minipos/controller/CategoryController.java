@@ -27,19 +27,19 @@ public class CategoryController {
 	
 	@PostMapping("create/category")
 	public String createCategory(@Valid @RequestBody Category category,
-			@RequestParam(value="tokenKey" ,required=false) String tokenKey) {
+			@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
-		if(tokenKey == null) {
-			result = new Gson().toJson(new Message("Required token key."));
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
 		}else {
-			if(userServices.checkTokenKey(tokenKey)!=null) {
-				if(userServices.checkTokenKey(tokenKey).getUserType() == 1) {
+			if(userServices.checkAuthKey(authKey)!=null) {
+				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = new Gson().toJson(categoryServices.save(category));
 				}else {
 					result = new Gson().toJson(new Message("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong token key."));
+				result = new Gson().toJson(new Message("Wrong auth key."));
 			}
 		}
 		

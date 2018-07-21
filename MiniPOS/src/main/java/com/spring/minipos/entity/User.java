@@ -10,8 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name="users")
@@ -22,44 +26,54 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="user_id")
+	@Expose
 	private long id;
 	
 	@Column(name="username",unique=true,nullable=false)
+	@Expose
 	private String username;
 	
 	@Column(name="password",nullable=false)
+	@Expose
 	private String password;
 	
 	@Column(name="user_type",nullable=false)
+	@Expose
 	private int userType;
 	
 	@Column(name="user_firstname",nullable=false)
+	@Expose
 	private String firstName;
 	
 	@Column(name="user_lastname",nullable=false)
+	@Expose
 	private String lastName;
 	
 	@Column(name="user_email",nullable=false)
+	@Expose
 	private String email;
 	
 	@Column(name="user_phone_number",nullable=false)
+	@Expose
 	private String phoneNumber;
 	
 	@Column(name="user_address",nullable=false)
+	@Expose
 	private String address;
 	
-	@Column(name="user_token_key",unique = true,nullable=false)
-	private String tokenKey;
-
+	@Column(name="authKey")
+	@Expose
+	private String authKey;
+	
 	@OneToMany(cascade = CascadeType.ALL,mappedBy="user")
 	private List<Order> orders = new ArrayList<Order>();
 	
 	public User() {
-		tokenKey = UUID.randomUUID().toString();
+		this.authKey = UUID.randomUUID().toString();
 	}
 	
 	public User(String username, String password, int userType, String firstName, String lastName, String email,
-			String phoneNumber, String address,String tokenKey) {
+			String phoneNumber, String address) {
 		this.username = username;
 		this.password = password;
 		this.userType = userType;
@@ -68,7 +82,7 @@ public class User {
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.address = address;
-		this.tokenKey = tokenKey;
+	
 	}
 
 	public long getId() {
@@ -143,15 +157,12 @@ public class User {
 		this.address = address;
 	}
 
-	public String getTokenKey() {
-		return tokenKey;
+	public String getAuthKey() {
+		return authKey;
 	}
 
-	public void setTokenKey(String tokenKey) {
-		this.tokenKey = tokenKey;
+	public void setTokenKey(String authKey) {
+		this.authKey = authKey;
 	}
-	
-	
-	
-	
+
 }
