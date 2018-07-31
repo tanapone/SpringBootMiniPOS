@@ -1,5 +1,6 @@
 package com.spring.minipos.controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 
 import javax.validation.Valid;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.spring.minipos.entity.MD5;
 import com.spring.minipos.entity.Message;
 import com.spring.minipos.entity.User;
 import com.spring.minipos.service.UserServices;
@@ -102,20 +104,35 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String checkLogin(@RequestBody User user) {
-		if(userServices.checkLogin(user.getUsername(), user.getPassword())!= null) {
-			return gson.toJson(userServices.checkLogin(user.getUsername(), user.getPassword()));
+	public String checkLogin(@RequestBody User user) throws NoSuchAlgorithmException {
+		if(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding())!= null) {
+			return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
 		}else {
 			return gson.toJson(new Message("Wrong username or password"));
 		}
 	}
 	
+	@GetMapping("/user")
+	public String getUserByAuthKey(@RequestParam(value="authKey" ,required=false)String authKey) {
+		String result = null;	
+		if(authKey == null) {
+				result = new Gson().toJson(new Message("Required auth key."));
+			}else {
+				if(userServices.checkAuthKey(authKey)!=null) {
+					result = gson.toJson(userServices.checkAuthKey(authKey));
+				}else {
+					result = gson.toJson(new Message("Wrong auth key."));
+				}
+		}
+		return result;
+	}
+	
 	@GetMapping("/create/user/admin")
-	public String createAdminUser() throws ParseException {
+	public String createAdminUser() throws ParseException, NoSuchAlgorithmException {
 		if(userServices.findAll().size()<1) {
 			User user = new User();
 			user.setUsername("admin");
-			user.setPassword("123456");
+			user.setPassword(new MD5("123456").Encoding());
 			user.setFirstName("Tanapone");
 			user.setLastName("Kanongsri");
 			user.setPhoneNumber("0931385440");
