@@ -33,14 +33,20 @@ public class UserController {
 	
 	@PostMapping("/create/user")
 	public String createUserAcc(@Valid @RequestBody User user,
-			@RequestParam(value="authKey" ,required=false) String authKey) {
+			@RequestParam(value="authKey" ,required=false) String authKey) throws NoSuchAlgorithmException {
 		String result = null;
 		if(authKey == null) {
 			result = new Gson().toJson(new Message("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
-					result = gson.toJson(userServices.save(user));
+					if(userServices.findUserByUsername(user.getUsername())!=null) {
+						result = gson.toJson(new Message("Please change username"));
+					}else {
+						String encodePassword = new MD5(user.getPassword()).Encoding();
+						user.setPassword(encodePassword);
+						result = gson.toJson(userServices.save(user));
+					}
 				}else {
 					result = gson.toJson(new Message("No permission."));
 				}
@@ -108,7 +114,20 @@ public class UserController {
 		if(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding())!= null) {
 			return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
 		}else {
-			return gson.toJson(new Message("Wrong username or password"));
+			return gson.toJson(new Message("Wrong username or password."));
+		}
+	}
+	
+	@PostMapping("/login/admin")
+	public String checkLoginAdmin(@RequestBody User user) throws NoSuchAlgorithmException {
+		if(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding())!= null) {
+			if(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()).getUserType() !=1) {
+				return gson.toJson(new Message("No permission."));
+			}else{
+				return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
+			}
+		}else {
+			return gson.toJson(new Message("Wrong username or password."));
 		}
 	}
 	

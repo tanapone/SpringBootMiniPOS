@@ -20,7 +20,7 @@ public class Company {
 	@Column(name="company_id")
 	private long id;
 	
-	@Column(name="company_name",nullable=false)
+	@Column(name="company_name",nullable=false,unique=true)
 	private String companyName;
 	
 	@Column(name="company_phone_number",nullable=false)
