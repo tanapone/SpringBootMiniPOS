@@ -34,6 +34,10 @@ public class UserServices {
 		return userRepository.findUserByUser(username);
 	}
 	
+	public User findUserByEmail(String email) {
+		return userRepository.findUserByEmail(email);
+	}
+	
 	public User checkAuthKey(String authKey) {
 		return userRepository.checkAuthKey(authKey);
 	}

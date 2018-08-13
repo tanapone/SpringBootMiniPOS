@@ -49,7 +49,7 @@ public class User {
 	@Expose
 	private String lastName;
 	
-	@Column(name="user_email",nullable=false)
+	@Column(name="user_email",nullable=false,unique=true)
 	@Expose
 	private String email;
 	

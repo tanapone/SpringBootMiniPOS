@@ -41,7 +41,9 @@ public class UserController {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(userServices.findUserByUsername(user.getUsername())!=null) {
-						result = gson.toJson(new Message("Please change username"));
+						result = gson.toJson(new Message("Please change username."));
+					}else if(userServices.findUserByEmail(user.getEmail())!=null) {
+						result = gson.toJson(new Message("Please change email."));
 					}else {
 						String encodePassword = new MD5(user.getPassword()).Encoding();
 						user.setPassword(encodePassword);
@@ -98,6 +100,28 @@ public class UserController {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(userServices.findUserByUsername(username));
+				}else {
+					result = gson.toJson(new Message("No permission."));
+				}
+			}else {
+				result = gson.toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+		
+	}
+	
+	@GetMapping("/user/email/{email}")
+	public String findUserByEmail(@PathVariable String email,
+			@RequestParam(value="authKey" ,required=false) String authKey) {
+		String result = null;
+		
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
+					result = gson.toJson(userServices.findUserByEmail(email));
 				}else {
 					result = gson.toJson(new Message("No permission."));
 				}
