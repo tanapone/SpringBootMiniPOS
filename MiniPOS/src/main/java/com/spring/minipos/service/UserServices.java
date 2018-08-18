@@ -18,6 +18,8 @@ public class UserServices {
 		return userRepository.save(user);
 	}
 	
+	
+	
 	public List<User> findAll(){
 		return userRepository.findAll();
 	}
@@ -40,6 +42,14 @@ public class UserServices {
 	
 	public User checkAuthKey(String authKey) {
 		return userRepository.checkAuthKey(authKey);
+	}
+	
+	public User getLastUser() {
+		return userRepository.findFirstByOrderByIdDesc();
+	}
+	
+	public void delete(User user) {
+		userRepository.delete(user);
 	}
 	
 }
