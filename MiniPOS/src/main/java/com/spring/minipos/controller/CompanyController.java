@@ -84,7 +84,6 @@ public class CompanyController {
 				result = gson.toJson(new Message("Wrong auth key."));
 			}
 		}
-
 		return result;
 	}
 	
