@@ -59,7 +59,7 @@ public class CompanyController {
 	}
 	
 	@PostMapping("/update/company")
-	public String updateUserAcc(@Valid @RequestBody Company company,
+	public String updateCompany(@Valid @RequestBody Company company,
 			@RequestParam(value = "authKey", required = false) String authKey) throws NoSuchAlgorithmException {
 		String result = null;
 		Company companyByUsername = companyService.findCompanyByName(company.getCompanyName());

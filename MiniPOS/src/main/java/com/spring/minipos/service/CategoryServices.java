@@ -22,4 +22,15 @@ public class CategoryServices {
 		return categoryRepository.findAll();
 	}
 	
+	public Category findCategoryById(long id) {
+		return categoryRepository.findCategoryById(id);
+	}
+	
+	public Category findCategoryByName(String categoryName) {
+		return categoryRepository.findCategoryByName(categoryName);
+	}
+	
+	public void delete(Category category) {
+		categoryRepository.delete(category);
+	}
 }
