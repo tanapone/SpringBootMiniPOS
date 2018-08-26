@@ -95,7 +95,7 @@ public class CompanyController {
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
-					result = new Gson().toJson(companyService.findAll());
+					result = gson.toJson(companyService.findAll());
 				}else {
 					result = new Gson().toJson(new Message("No permission."));
 				}

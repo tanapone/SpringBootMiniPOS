@@ -10,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+
+import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name="company")
@@ -17,21 +20,28 @@ public class Company {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Expose
 	@Column(name="company_id")
 	private long id;
 	
+	@Expose
+	@NotBlank
 	@Column(name="company_name",nullable=false,unique=true)
 	private String companyName;
 	
+	@Expose
 	@Column(name="company_phone_number",nullable=false)
 	private String companyPhoneNumber;
 	
+	@Expose
 	@Column(name="company_email",nullable=false)
 	private String companyEmail;
 	
+	@Expose
 	@Column(name="company_address",nullable=false)
 	private String companyAddress;
 	
+
 	@OneToMany(cascade = CascadeType.ALL,mappedBy="company")
 	private List<Product> products;
 	

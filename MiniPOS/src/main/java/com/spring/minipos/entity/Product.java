@@ -14,38 +14,49 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name="product")
 public class Product {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Expose
 	@Column(name="product_id")
 	private long id;
 	
+	@Expose
 	@Column(name="product_name")
 	private String productName;
 	
+	@Expose
 	@Column(name="product_barcode_id")
 	private String productBarcodeID;
 	
+	@Expose
 	@Column(name="product_capital_price")
 	private double productCapitalPrice;
-
+	
+	@Expose
 	@Column(name="product_sale_price")
 	private double productSalePrice;
 
+	@Expose
 	@Column(name="product_minimum")
 	private int productMinimum;
 	
+	@Expose
 	@Column(name="product_qty")
 	private int productQty;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@Expose
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name="category_id")
 	private Category category;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@Expose
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name="company_id")
 	private Company company;
 
