@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.Category;
-import com.spring.minipos.entity.Company;
 import com.spring.minipos.entity.Message;
 import com.spring.minipos.service.CategoryServices;
 import com.spring.minipos.service.UserServices;

@@ -49,6 +49,10 @@ public class ProductController {
 									.equals(x.getProductName())
 									).findAny().orElse(null) != null) {
 						result = new Gson().toJson(new Message("Please change product name."));
+					}
+					
+					if(productServices.findProductByProductBarcodeID(product.getProductBarcodeID())!=null) {
+						result = gson.toJson(new Message("Please change product barcode."));
 					}else {
 						result = new Gson().toJson(productServices.save(product));	
 					}
