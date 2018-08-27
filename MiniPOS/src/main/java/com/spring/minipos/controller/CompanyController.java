@@ -116,9 +116,13 @@ public class CompanyController {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(companyService.findCompanyById(id)!=null) {
-						Company company = new Company();
-						company = companyService.findCompanyById(id);
-						companyService.delete(company);
+						if(companyService.findCompanyById(id).getProducts().size()>0) {
+							result = gson.toJson(new Message("This company still have products."));
+						}else {
+							Company company = new Company();
+							company = companyService.findCompanyById(id);
+							companyService.delete(company);
+						}
 					}else {
 						result = gson.toJson(new Message("no company detail."));
 					}

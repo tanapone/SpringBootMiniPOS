@@ -22,4 +22,20 @@ public class ProductServices {
 		return productRepository.findAll();
 	}
 	
+	public Product findProductById(long id) {
+		return productRepository.findProductById(id);
+	}
+	
+	public Product findProductByProductName(String productName) {
+		return productRepository.findProductByProductName(productName);
+	}
+	
+	public Product findProductByProductBarcodeID(String productBarcodeID) {
+		return productRepository.findProductByProductBarcodeID(productBarcodeID);
+	}
+	
+	public void delete(Product product) {
+		productRepository.delete(product);
+	}
+	
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.Category;
+import com.spring.minipos.entity.Company;
 import com.spring.minipos.entity.Message;
 import com.spring.minipos.service.CategoryServices;
 import com.spring.minipos.service.UserServices;
@@ -118,9 +119,13 @@ public class CategoryController {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(categoryServices.findCategoryById(id) !=null) {
-						Category category = new Category();
-						category = categoryServices.findCategoryById(id);
-						categoryServices.delete(category);
+						if(categoryServices.findCategoryById(id).getProducts().size()>0) {
+							result = gson.toJson(new Message("This category still have products."));
+						}else {
+							Category category = new Category();
+							category = categoryServices.findCategoryById(id);
+							categoryServices.delete(category);
+						}
 					}else {
 						result = gson.toJson(new Message("no category detail."));
 					}
