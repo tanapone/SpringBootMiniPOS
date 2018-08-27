@@ -1,7 +1,6 @@
 package com.spring.minipos.controller;
 
 import java.security.NoSuchAlgorithmException;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.Category;
-import com.spring.minipos.entity.Company;
 import com.spring.minipos.entity.Message;
 import com.spring.minipos.service.CategoryServices;
 import com.spring.minipos.service.UserServices;
@@ -70,7 +68,7 @@ public class CategoryController {
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
-					result = gson.toJson(categoryServices.findAll());
+					result =  gson.toJson(categoryServices.findAll()); 
 				}else {
 					result = new Gson().toJson(new Message("No permission."));
 				}
