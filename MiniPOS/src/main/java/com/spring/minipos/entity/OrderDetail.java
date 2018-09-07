@@ -1,55 +1,64 @@
 package com.spring.minipos.entity;
 
 import java.io.Serializable;
-
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.google.gson.annotations.Expose;
+
 
 
 @Entity
-@AssociationOverrides({
-	@AssociationOverride(name="orderDetailID.order",joinColumns = @JoinColumn(name="order_id"))
-	,@AssociationOverride(name="orderDetailID.product",joinColumns = @JoinColumn(name="product_id"))
-})
+@Table(name="order_detail")
 public class OrderDetail implements Serializable{
 	
-	@EmbeddedId
-	private OrderDetailId orderDetailID = new OrderDetailId();
-	
-	@Column(name="quantity")
-	private int quantity;
-	
-	@Column(name="price")
-	private double price;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	public OrderDetailId getPk() {
-		return orderDetailID;
+	@Id
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
+	private Order order;
+    
+    @Id
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id")
+    @Expose
+	private Product product;
+    
+    @Expose
+    @Column(name = "product_amount")
+    private int productAmount;
+    
+	public Order getOrder() {
+		return order;
 	}
 
-	public void setPk(OrderDetailId pk) {
-		this.orderDetailID = pk;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
-	public int getQuantity() {
-		return quantity;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
-	public double getPrice() {
-		return price;
+	public int getProductAmount() {
+		return productAmount;
 	}
 
-	public void setPrice(double price) {
-		this.price = price;
+	public void setProductAmount(int productAmount) {
+		this.productAmount = productAmount;
 	}
-	
-	
 	
 }

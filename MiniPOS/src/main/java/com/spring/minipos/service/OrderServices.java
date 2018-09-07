@@ -1,5 +1,7 @@
 package com.spring.minipos.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +16,9 @@ public class OrderServices {
 	
 	public Order save(Order order) {
 		return orderRepository.save(order);
+	}
+	
+	public List<Order> findAll(){
+		return orderRepository.findAll();
 	}
 }

@@ -13,9 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
 
 import com.google.gson.annotations.Expose;
 
@@ -23,27 +26,37 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name="orders")
 public class Order {
+	
+	public Order() {	
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="order_id")
 	@Expose
 	private long id;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name="orderDate")
+	@CreatedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="order_date",columnDefinition="DATETIME")
 	@Expose
-	private Date orderDate;
+	private Date orderDate = new Date();
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id")
 	@Expose
 	private User user;
-
-	@OneToMany(mappedBy="orderDetailID.order",cascade = CascadeType.ALL)
+	
+	@OneToMany(mappedBy="order",cascade = CascadeType.ALL)
 	@Expose
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 	
-	public Order() {}
+	@Column(name="order_sum_price")
+	private double sumPrice;
+	
+	public Order(User user) {
+		this.user = user;
+	}
 	
 	public Order(Date orderDate, User user) {
 		super();
@@ -89,6 +102,13 @@ public class Order {
 	public void setOrderDetails(List<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
-	
+
+	public double getSumPrice() {
+		return sumPrice;
+	}
+
+	public void setSumPrice(double sumPrice) {
+		this.sumPrice = sumPrice;
+	}
 	
 }

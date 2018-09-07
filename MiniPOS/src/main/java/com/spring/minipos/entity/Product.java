@@ -67,7 +67,7 @@ public class Product {
 	@Type(type="true_false")
 	private boolean productStatus;
 	
-	@OneToMany(mappedBy="orderDetailID.product",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="product",cascade = CascadeType.ALL)
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 	
 	@OneToMany(mappedBy="invoiceDetailID.product",cascade = CascadeType.ALL)
