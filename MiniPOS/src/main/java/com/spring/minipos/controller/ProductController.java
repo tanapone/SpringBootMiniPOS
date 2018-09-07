@@ -144,4 +144,39 @@ public class ProductController {
 		return result;
 	}
 	
+	@GetMapping("products/less")
+	public String showAllLessProducts(@RequestParam(value="authKey" ,required=false) String authKey) {
+		String result = null;
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
+					result = gson.toJson(productServices.findLessProducts());
+				}else {
+					result = new Gson().toJson(new Message("No permission."));
+				}
+			}else {
+				result = new Gson().toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
+	// Mobile controller
+	@GetMapping("products/mobile")
+	public String showAllProductsMobile(@RequestParam(value="authKey" ,required=false) String authKey) {
+		String result = null;
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+					result = gson.toJson(productServices.findAll());
+			}else {
+				result = new Gson().toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
 }

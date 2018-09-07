@@ -194,15 +194,6 @@ public class UserController {
 
 	}
 
-	@PostMapping("/login")
-	public String checkLogin(@RequestBody User user) throws NoSuchAlgorithmException {
-		if (userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()) != null) {
-			return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
-		} else {
-			return gson.toJson(new Message("Wrong username or password."));
-		}
-	}
-
 	@PostMapping("/login/admin")
 	public String checkLoginAdmin(@RequestBody User user) throws NoSuchAlgorithmException {
 		if (userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()) != null) {
@@ -264,6 +255,16 @@ public class UserController {
 			}
 		}
 		return result;
+	}
+	
+	//Mobile Controller
+	@PostMapping("/login/mobile")
+	public String checkLogin(@RequestBody User user) throws NoSuchAlgorithmException {
+		if (userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()) != null) {
+			return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
+		} else {
+			return gson.toJson(new Message("Wrong username or password."));
+		}
 	}
 
 }

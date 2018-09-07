@@ -1,5 +1,7 @@
 package com.spring.minipos.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,4 +20,6 @@ public interface ProductRepository extends JpaRepository<Product , Long>{
 	@Query("SELECT p FROM Product p WHERE p.productBarcodeID = ?1")
 	Product findProductByProductBarcodeID(String productBarcodeID);
 	
+	@Query("SELECT p FROM Product p WHERE p.productQty <= p.productMinimum")
+	List<Product> findLessProducts();
 }

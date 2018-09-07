@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.google.gson.annotations.Expose;
 
 @Entity
@@ -60,6 +62,11 @@ public class Product {
 	@JoinColumn(name="company_id")
 	private Company company;
 
+	@Expose
+	@Column(name="product_statuts")
+	@Type(type="true_false")
+	private boolean productStatus;
+	
 	@OneToMany(mappedBy="orderDetailID.product",cascade = CascadeType.ALL)
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 	
@@ -181,6 +188,15 @@ public class Product {
 		this.invoiceDetail = invoiceDetail;
 	}
 
+	public boolean isProductStatus() {
+		return productStatus;
+	}
+
+	public void setProductStatus(boolean productStatus) {
+		this.productStatus = productStatus;
+	}
+
+	
 	
 	
 }

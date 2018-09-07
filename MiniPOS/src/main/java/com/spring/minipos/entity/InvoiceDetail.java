@@ -1,5 +1,6 @@
 package com.spring.minipos.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.AssociationOverride;
@@ -16,8 +17,13 @@ import javax.persistence.TemporalType;
 	@AssociationOverride(name="invoiceDetailID.invoice",joinColumns = @JoinColumn(name="invoice_id"))
 	,@AssociationOverride(name="invoiceDetailID.product",joinColumns = @JoinColumn(name="product_id"))
 })
-public class InvoiceDetail {
+public class InvoiceDetail implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@EmbeddedId
 	private InvoiceDetailId invoiceDetailID = new InvoiceDetailId();
 	

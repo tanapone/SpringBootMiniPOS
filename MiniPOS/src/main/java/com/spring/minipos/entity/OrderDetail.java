@@ -1,5 +1,7 @@
 package com.spring.minipos.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
@@ -13,7 +15,7 @@ import javax.persistence.JoinColumn;
 	@AssociationOverride(name="orderDetailID.order",joinColumns = @JoinColumn(name="order_id"))
 	,@AssociationOverride(name="orderDetailID.product",joinColumns = @JoinColumn(name="product_id"))
 })
-public class OrderDetail {
+public class OrderDetail implements Serializable{
 	
 	@EmbeddedId
 	private OrderDetailId orderDetailID = new OrderDetailId();

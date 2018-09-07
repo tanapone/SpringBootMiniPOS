@@ -34,6 +34,10 @@ public class ProductServices {
 		return productRepository.findProductByProductBarcodeID(productBarcodeID);
 	}
 	
+	public List<Product> findLessProducts() {
+		return productRepository.findLessProducts();
+	}
+	
 	public void delete(Product product) {
 		productRepository.delete(product);
 	}
