@@ -51,8 +51,13 @@ public class Order {
 	@Expose
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 	
+	@Expose
 	@Column(name="order_sum_price")
 	private double sumPrice;
+	
+	@Expose
+	@Column(name="order_profit")
+	private double profit;
 	
 	public Order(User user) {
 		this.user = user;
@@ -110,5 +115,14 @@ public class Order {
 	public void setSumPrice(double sumPrice) {
 		this.sumPrice = sumPrice;
 	}
+
+	public double getProfit() {
+		return profit;
+	}
+
+	public void setProfit(double profit) {
+		this.profit = profit;
+	}
+	
 	
 }

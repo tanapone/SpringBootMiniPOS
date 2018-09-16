@@ -51,6 +51,10 @@ public class OrderController {
 						for(OrderDetail orderDetails : orderDetail) {
 							orderDetails.setOrder(order);
 							order.getOrderDetails().add(orderDetails);
+							double sumPrice = orderDetails.getProduct().getProductSalePrice() * orderDetails.getProductAmount();
+							double profit = sumPrice - (orderDetails.getProduct().getProductCapitalPrice() * orderDetails.getProductAmount()); 
+							order.setSumPrice(sumPrice);
+							order.setProfit(profit);
 							productServices.save(orderDetails.getProduct());
 							orderServices.save(order);
 						}

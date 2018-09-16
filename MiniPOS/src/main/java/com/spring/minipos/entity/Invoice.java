@@ -25,13 +25,13 @@ public class Invoice {
 	private long id;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name="invoiceDate")
-	private Date invoiceDate;
+	@Column(name="invoiceDate",columnDefinition="DATETIME")
+	private Date invoiceDate = new Date();
 
 	@Column(name="sumPrice")
 	private double sumPrice;
 
-	@OneToMany(mappedBy="invoiceDetailID.invoice",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="invoice",cascade = CascadeType.ALL)
 	private List<InvoiceDetail> invoiceDetails = new ArrayList<InvoiceDetail>(); 
 	
 	public long getId() {

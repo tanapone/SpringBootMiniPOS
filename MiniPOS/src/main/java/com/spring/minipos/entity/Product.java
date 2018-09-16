@@ -70,7 +70,7 @@ public class Product {
 	@OneToMany(mappedBy="product",cascade = CascadeType.ALL)
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 	
-	@OneToMany(mappedBy="invoiceDetailID.product",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="product",cascade = CascadeType.ALL)
 	private List<InvoiceDetail> invoiceDetail = new ArrayList<InvoiceDetail>();
 	
 	public Product() {}
