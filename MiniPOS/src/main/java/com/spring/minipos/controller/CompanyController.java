@@ -122,6 +122,7 @@ public class CompanyController {
 							Company company = new Company();
 							company = companyService.findCompanyById(id);
 							companyService.delete(company);
+							result = gson.toJson(new Message("Success."));
 						}
 					}else {
 						result = gson.toJson(new Message("no company detail."));

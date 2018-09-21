@@ -107,6 +107,7 @@ public class UserController {
 						User user = new User();
 						user = userServices.findUserById(id);
 						userServices.delete(user);
+						result = gson.toJson(new Message("Success."));
 					}else {
 						result = gson.toJson(new Message("No user found."));
 					}

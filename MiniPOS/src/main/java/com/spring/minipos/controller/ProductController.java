@@ -130,6 +130,7 @@ public class ProductController {
 						Product product = new Product();
 						product = productServices.findProductById(id);
 						productServices.delete(product);
+						result = gson.toJson(new Message("Success."));
 					}else {
 						result = gson.toJson(new Message("No user found."));
 					}

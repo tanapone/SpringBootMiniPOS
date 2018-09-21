@@ -124,6 +124,7 @@ public class CategoryController {
 							Category category = new Category();
 							category = categoryServices.findCategoryById(id);
 							categoryServices.delete(category);
+							result = gson.toJson(new Message("Success."));
 						}
 					}else {
 						result = gson.toJson(new Message("no category detail."));
