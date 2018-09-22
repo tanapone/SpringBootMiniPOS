@@ -44,17 +44,14 @@ public class ProductController {
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
-					if(productServices.findAll()
-							.stream().filter(x->product.getProductName()
-									.equals(x.getProductName())
-									).findAny().orElse(null) != null) {
+					if(productServices.findProductByProductName(product.getProductName())!=null) {
 						result = new Gson().toJson(new Message("Please change product name."));
-					}
-					
-					if(productServices.findProductByProductBarcodeID(product.getProductBarcodeID())!=null) {
-						result = gson.toJson(new Message("Please change product barcode."));
 					}else {
-						result = new Gson().toJson(productServices.save(product));	
+						if(productServices.findProductByProductBarcodeID(product.getProductBarcodeID())!=null) {
+							result = gson.toJson(new Message("Please change product barcode."));
+						}else {
+							result = new Gson().toJson(productServices.save(product));	
+						}
 					}
 				}else {
 					result = new Gson().toJson(new Message("No permission."));
@@ -111,6 +108,30 @@ public class ProductController {
 					result = gson.toJson(new Message("No permission."));
 				}
 			} else {
+				result = gson.toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
+	@GetMapping("product/{id}")
+	public String findProductById(@PathVariable long id
+			,@RequestParam(value = "authKey", required = false) String authKey) {
+		String result = null;
+		if (authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		} else {
+			if (userServices.checkAuthKey(authKey) != null) {
+				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
+					if(productServices.findProductById(id)!=null) {
+						result = gson.toJson(productServices.findProductById(id));
+					}else {
+						result = gson.toJson(new Message("No product found."));
+					}
+				}else{
+					result = gson.toJson(new Message("No permission."));	
+				}
+			}else {
 				result = gson.toJson(new Message("Wrong auth key."));
 			}
 		}
