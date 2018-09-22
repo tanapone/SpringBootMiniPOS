@@ -106,6 +106,30 @@ public class CompanyController {
 		return result;
 	}
 	
+	@GetMapping("/company/{id}")
+	public String findCompanyById(@PathVariable long id
+			,@RequestParam(value = "authKey", required = false) String authKey) {
+		String result = null;
+		if (authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		} else {
+			if (userServices.checkAuthKey(authKey) != null) {
+				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
+					if(companyService.findCompanyById(id)!=null) {
+						result = gson.toJson(companyService.findCompanyById(id));
+					}else {
+						result = gson.toJson(new Message("no company detail."));
+					}
+				} else {
+					result = gson.toJson(new Message("No permission."));
+				}
+			} else {
+				result = gson.toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
 	@DeleteMapping("/delete/company/{id}")
 	public String removeCompany(@PathVariable long id
 			,@RequestParam(value = "authKey", required = false) String authKey) {

@@ -108,6 +108,27 @@ public class CategoryController {
 		return result;
 	}
 	
+	@GetMapping("category/{id}")
+	public String getCategoryById(@PathVariable long id
+			,@RequestParam(value = "authKey", required = false) String authKey) {
+		String result = null;
+		if (authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		} else {
+			if (userServices.checkAuthKey(authKey) != null) {
+				if(categoryServices.findCategoryById(id) !=null) {
+					result = gson.toJson(categoryServices.findCategoryById(id));
+				}else {
+					result = gson.toJson(new Message("no category detail."));
+				}
+			}else {
+				result = gson.toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
+	
 	@DeleteMapping("/delete/category/{id}")
 	public String removeCategory(@PathVariable long id
 			,@RequestParam(value = "authKey", required = false) String authKey) {
