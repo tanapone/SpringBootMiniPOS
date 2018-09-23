@@ -42,4 +42,7 @@ public class ProductServices {
 		productRepository.delete(product);
 	}
 	
+	public List<Product> findProductByName(String name) {
+		return productRepository.findProductByName(name);
+	}
 }

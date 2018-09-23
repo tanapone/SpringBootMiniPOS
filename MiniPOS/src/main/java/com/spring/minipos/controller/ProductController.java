@@ -95,7 +95,8 @@ public class ProductController {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if (productServices.findProductById(product.getId()) != null) {
 						if (productByProductName!= null && productByProductName.getId() != product.getId()) {
-							result = gson.toJson(new Message("Please change product name."));
+							result = gson.toJson(new Message(""
+									+ ""));
 						}else if(productByProductBarcodeID!=null && productByProductBarcodeID.getId() != product.getId()) {
 							result = gson.toJson(new Message("Please change product barcode."));
 						}else {
@@ -199,6 +200,21 @@ public class ProductController {
 			}
 		}
 		return result;
+	}
+	
+	@GetMapping("product/mobile/searchName")
+	public String findAllProductLikeName(@RequestParam(value="authKey" ,required=false) String authKey,@RequestParam(value="name" ,required=true) String searchName) {
+		String result = null;
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+				result = gson.toJson(productServices.findProductByName(searchName));
+			}else {
+				result = new Gson().toJson(new Message("Wrong auth key."));
+			}
+		}
+	return result;
 	}
 	
 }
