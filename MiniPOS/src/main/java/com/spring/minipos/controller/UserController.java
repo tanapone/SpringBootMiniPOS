@@ -258,6 +258,20 @@ public class UserController {
 		return result;
 	}
 	
+	@PostMapping("/user/resetPassword")
+	public String resetUserPassword(@RequestBody User user) throws NoSuchAlgorithmException {
+		String result = null;
+				if(userServices.checkAuthKey(user.getAuthKey())!=null) {
+					String encodingPassword = new MD5(user.getPassword()).Encoding();
+					user.setPassword(encodingPassword);
+					userServices.save(user);
+					result = gson.toJson(new Message("Success."));
+				}else {
+					result = gson.toJson(new Message("No user found."));
+				}
+		return result;
+	}
+	
 	//Mobile Controller
 	@PostMapping("/login/mobile")
 	public String checkLogin(@RequestBody User user) throws NoSuchAlgorithmException {
