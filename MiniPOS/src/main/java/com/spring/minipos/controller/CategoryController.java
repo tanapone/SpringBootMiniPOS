@@ -161,4 +161,20 @@ public class CategoryController {
 		return result;
 	}
 	
+	
+	//Mobile controllers
+	@GetMapping("categories/mobile")
+	public String showAllCategoriesMobile(@RequestParam(value="authKey" ,required=false) String authKey) {
+		String result = null;
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+					result =  gson.toJson(categoryServices.findAll()); 
+			}else {
+				result = new Gson().toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
 }

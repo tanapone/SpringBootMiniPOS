@@ -20,6 +20,7 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.annotations.Expose;
 
 
@@ -39,6 +40,7 @@ public class Order {
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="order_date",columnDefinition="DATETIME")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:00", timezone="CER")
 	@Expose
 	private Date orderDate = new Date();
 	

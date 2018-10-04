@@ -43,6 +43,14 @@ public class ProductServices {
 	}
 	
 	public List<Product> findProductByName(String name) {
-		return productRepository.findProductByName(name);
+		return productRepository.findProductByNameMobile(name);
+	}
+	
+	public List<Product> findProductByCategory(long id){
+		return productRepository.findProductByCategoryMobile(id);
+	}
+	
+	public List<Product> findLessProductsMobile(){
+		return productRepository.findLessProductsMobile();
 	}
 }

@@ -23,6 +23,12 @@ public interface ProductRepository extends JpaRepository<Product , Long>{
 	@Query("SELECT p FROM Product p WHERE p.productQty <= p.productMinimum")
 	List<Product> findLessProducts();
 	
-	@Query("SELECT p FROM Product p WHERE p.productName like %:name%")
-	List<Product> findProductByName(String name);
+	@Query("SELECT p FROM Product p WHERE p.productName LIKE %?1% AND p.productStatus != 'F' ")
+	List<Product> findProductByNameMobile(String name);
+	
+	@Query("SELECT p FROM Product p WHERE p.category.id = ?1 AND p.productStatus != 'F'")
+	List<Product> findProductByCategoryMobile(long id);
+	
+	@Query("SELECT p FROM Product p WHERE p.productQty <= p.productMinimum AND p.productStatus != 'F'")
+	List<Product> findLessProductsMobile();
 }

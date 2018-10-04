@@ -21,4 +21,8 @@ public class OrderServices {
 	public List<Order> findAll(){
 		return orderRepository.findAll();
 	}
+	
+	public Order getLast() {
+		return orderRepository.findFirstByOrderByIdDesc();
+	}
 }

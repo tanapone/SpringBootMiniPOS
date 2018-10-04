@@ -202,6 +202,21 @@ public class ProductController {
 		return result;
 	}
 	
+	@GetMapping("products/mobile/less")
+	public String showAllLessProductsMobile(@RequestParam(value="authKey" ,required=false) String authKey) {
+		String result = null;
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+					result = gson.toJson(productServices.findLessProductsMobile());
+			}else {
+				result = new Gson().toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
 	@GetMapping("product/mobile/searchName")
 	public String findAllProductLikeName(@RequestParam(value="authKey" ,required=false) String authKey,@RequestParam(value="name" ,required=true) String searchName) {
 		String result = null;
@@ -217,4 +232,80 @@ public class ProductController {
 	return result;
 	}
 	
+	@GetMapping("product/mobile/{id}")
+	public String findProductByIdMobile(@PathVariable long id
+			,@RequestParam(value = "authKey", required = false) String authKey) {
+		String result = null;
+		if (authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		} else {
+			if (userServices.checkAuthKey(authKey) != null) {
+					if(productServices.findProductById(id)!=null) {
+						result = gson.toJson(productServices.findProductById(id));
+					}else {
+						result = gson.toJson(new Message("No product found."));
+					}
+			}else {
+				result = gson.toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
+	@GetMapping("product/mobile/categories")
+	public String findProductByCategories(@PathVariable long id
+			,@RequestParam(value = "authKey", required = false) String authKey) {
+		String result = null;
+		if (authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		} else {
+			if (userServices.checkAuthKey(authKey) != null) {
+					if(productServices.findProductById(id)!=null) {
+						result = gson.toJson(productServices.findProductByCategory(id));
+					}else {
+						result = gson.toJson(new Message("No product found."));
+					}
+			}else {
+				result = gson.toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
+	@GetMapping("product/mobile/category/{id}")
+	public String findProductByCategory(@PathVariable long id
+			,@RequestParam(value = "authKey", required = false) String authKey) {
+		String result = null;
+		if (authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		} else {
+			if (userServices.checkAuthKey(authKey) != null) {
+					if(productServices.findProductById(id)!=null) {
+						result = gson.toJson(productServices.findProductByCategory(id));
+					}else {
+						result = gson.toJson(new Message("No product found."));
+					}
+			}else {
+				result = gson.toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
+	
+	@GetMapping("product/mobile/searchBarcode")
+	public String findProductByBarcode(@RequestParam(value="authKey" ,required=false) String authKey,
+			@RequestParam(value="barcodeID" ,required=true) String barcodeID) {
+		String result = null;
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+				result = gson.toJson(productServices.findProductByProductBarcodeID(barcodeID));
+			}else {
+				result = new Gson().toJson(new Message("Wrong auth key."));
+			}
+		}
+	return result;
+	}
 }

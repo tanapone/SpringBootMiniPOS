@@ -39,32 +39,50 @@ public class OrderController {
 	
 	Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 	
-	@PostMapping("/create/order")
-	public String createOrder(@Valid @RequestBody List<OrderDetail> orderDetail,
-			@RequestParam(value="authKey" ,required=false) String authKey) {
-		String result = null;
-		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
-		}else {
-			if(userServices.checkAuthKey(authKey)!=null) {
-					Order order = new Order((userServices.checkAuthKey(authKey)));
-						for(OrderDetail orderDetails : orderDetail) {
-							orderDetails.setOrder(order);
-							order.getOrderDetails().add(orderDetails);
-							double sumPrice = orderDetails.getProduct().getProductSalePrice() * orderDetails.getProductAmount();
-							double profit = sumPrice - (orderDetails.getProduct().getProductCapitalPrice() * orderDetails.getProductAmount()); 
-							order.setSumPrice(sumPrice);
-							order.setProfit(profit);
+	@PostMapping("create/order")
+	public String createOrder(@Valid @RequestBody Order order,
+			@RequestParam(value="authKey", required=false) String authKey){
+				String result = null;
+				
+				if(authKey == null){
+					result = new Gson().toJson(new Message("Required auth key."));
+				}else{
+					if(userServices.checkAuthKey(authKey)!=null){
+						Order newOrder = new Order((userServices.checkAuthKey(authKey)));
+						newOrder.setOrderDetails(order.getOrderDetails());
+						double sumPrice = 0;
+						double profit = 0;
+						for(OrderDetail orderDetails: newOrder.getOrderDetails()) {
+							orderDetails.setOrder(newOrder);
+							//Calculate 
+							double newSumPrice = orderDetails.getProduct().getProductSalePrice() * orderDetails.getProductAmount();
+							double newProfit = newSumPrice - (orderDetails.getProduct().getProductCapitalPrice() * orderDetails.getProductAmount()); 
+							sumPrice+=newSumPrice;
+							profit+=newProfit;
+							//UpdateStock
+							Product product = new Product();
+							product = productServices.findProductById(orderDetails.getProduct().getId());
+							int oldQty = product.getProductQty();
+							int newQty = oldQty - orderDetails.getProductAmount();
+							product.setProductQty(newQty);
+							orderDetails.setProduct(product);
+							newOrder.setUser(userServices.checkAuthKey(authKey));
 							productServices.save(orderDetails.getProduct());
-							orderServices.save(order);
-						}
-						result = gson.toJson(order);
-			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+							
+						}	
+							newOrder.setSumPrice(sumPrice);
+							newOrder.setProfit(profit);
+							orderServices.save(newOrder);
+							result = gson.toJson(new Message("Success"));
+						
+					}else{
+						result = new Gson().toJson(new Message("Wrong auth key."));
+					}
+				}
+				
+				return result;
 			}
-		}
-		return result;
-	}
+	
 	
 	@GetMapping("/orders")
 	public String showAllOrders(@RequestParam(value="authKey" ,required=false) String authKey) {
@@ -80,4 +98,21 @@ public class OrderController {
 		}
 		return result;
 	}
+	
+	@GetMapping("/order/last")
+	public String getLastOrder(@RequestParam(value="authKey" ,required=false) String authKey) {
+		String result = null;
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+				result = gson.toJson(orderServices.getLast());
+			}else {
+				result = new Gson().toJson(new Message("Wrong auth key."));
+			}
+		}
+		return result;
+	}
+	
+
 }
