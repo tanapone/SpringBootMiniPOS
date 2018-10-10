@@ -15,22 +15,28 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name="invoice")
 public class Invoice {
 	
+	@Expose
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="invoice_id")
 	private long id;
 	
+	@Expose
 	@Temporal(TemporalType.DATE)
 	@Column(name="invoiceDate",columnDefinition="DATETIME")
 	private Date invoiceDate = new Date();
 
+	@Expose
 	@Column(name="sumPrice")
 	private double sumPrice;
 
+	@Expose
 	@OneToMany(mappedBy="invoice",cascade = CascadeType.ALL)
 	private List<InvoiceDetail> invoiceDetails = new ArrayList<InvoiceDetail>(); 
 	

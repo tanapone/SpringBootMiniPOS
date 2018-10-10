@@ -1,5 +1,10 @@
 package com.spring.minipos.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -7,6 +12,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -114,5 +120,24 @@ public class OrderController {
 		return result;
 	}
 	
+
+	@GetMapping("/order/{startDate}/{endDate}")
+	public String getOrderBettweenDate(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
+		String result = null;
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDayDate = df.parse(startDate);
+		Date endDayDate = df.parse(endDate);
+		Date realEndDayDate = addDays(endDayDate,1);
+		result = gson.toJson(orderServices.getOrderBetweenDate(startDayDate, realEndDayDate));
+		return result;
+	}
+	
+    public static Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
 
 }

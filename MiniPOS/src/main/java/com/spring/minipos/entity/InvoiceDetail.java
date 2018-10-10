@@ -15,6 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Type;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.gson.annotations.Expose;
+
 @Entity
 public class InvoiceDetail implements Serializable{
 
@@ -25,20 +30,26 @@ public class InvoiceDetail implements Serializable{
     @JoinColumn(name = "invoice_id")
 	private Invoice invoice;
 	
+	@Expose
 	@Id
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
 	private Product product;
 	
+	@Expose
 	@Column(name="quantity")
 	private int quantity;
 	
+	@Expose
 	@Temporal(TemporalType.DATE)
-	@Column(name="prodcutInDate",columnDefinition="DATETIME")
+	@JsonFormat(pattern="yyyy-MM-dd")
+	@Column(name="product_in_date")
 	private Date productInDate;
 
+	@Expose
 	@Column(name="product_in")
-	private String productIn;
+	@Type(type="true_false")
+	private boolean productIn;
 	
 	public int getQuantity() {
 		return quantity;
@@ -56,11 +67,11 @@ public class InvoiceDetail implements Serializable{
 		this.productInDate = productInDate;
 	}
 
-	public String getProductIn() {
+	public boolean getProductIn() {
 		return productIn;
 	}
 
-	public void setProductIn(String productIn) {
+	public void setProductIn(boolean productIn) {
 		this.productIn = productIn;
 	}
 

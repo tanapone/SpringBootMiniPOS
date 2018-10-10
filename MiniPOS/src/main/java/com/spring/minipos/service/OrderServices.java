@@ -1,5 +1,6 @@
 package com.spring.minipos.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,9 @@ public class OrderServices {
 	
 	public Order getLast() {
 		return orderRepository.findFirstByOrderByIdDesc();
+	}
+	
+	public List<Order> getOrderBetweenDate(Date startDate,Date endDate){
+		return orderRepository.findOrderBetweenDate(startDate, endDate);
 	}
 }

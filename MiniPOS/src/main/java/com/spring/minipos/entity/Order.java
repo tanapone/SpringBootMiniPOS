@@ -28,8 +28,7 @@ import com.google.gson.annotations.Expose;
 @Table(name="orders")
 public class Order {
 	
-	public Order() {	
-	}
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +41,7 @@ public class Order {
 	@Column(name="order_date",columnDefinition="DATETIME")
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:00", timezone="CER")
 	@Expose
-	private Date orderDate = new Date();
+	private Date orderDate;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id")
@@ -60,6 +59,10 @@ public class Order {
 	@Expose
 	@Column(name="order_profit")
 	private double profit;
+	
+	public Order() {
+		orderDate = new Date();
+	}
 	
 	public Order(User user) {
 		this.user = user;
