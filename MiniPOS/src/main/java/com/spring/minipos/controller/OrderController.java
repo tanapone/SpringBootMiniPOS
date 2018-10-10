@@ -122,7 +122,7 @@ public class OrderController {
 	
 
 	@GetMapping("/order/{startDate}/{endDate}")
-	public String getOrderBettweenDate(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
+	public String getOrderBetweenDate(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
 		String result = null;
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDayDate = df.parse(startDate);
