@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.google.gson.annotations.Expose;
 
 @Entity
@@ -61,6 +63,11 @@ public class User {
 	@Expose
 	private String address;
 	
+	@Column(name="user_status")
+	@Type(type="true_false")
+	@Expose
+	private boolean userStatus;
+		
 	@Column(name="authKey")
 	@Expose
 	private String authKey;
@@ -73,7 +80,7 @@ public class User {
 	}
 	
 	public User(String username, String password, int userType, String firstName, String lastName, String email,
-			String phoneNumber, String address) {
+			String phoneNumber, String address, boolean userStatus) {
 		this.username = username;
 		this.password = password;
 		this.userType = userType;
@@ -82,7 +89,7 @@ public class User {
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.address = address;
-	
+		this.userStatus = userStatus;
 	}
 
 	public long getId() {
@@ -165,4 +172,25 @@ public class User {
 		this.authKey = authKey;
 	}
 
+	public boolean isUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(boolean userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
+	public void setAuthKey(String authKey) {
+		this.authKey = authKey;
+	}
+
+	
 }

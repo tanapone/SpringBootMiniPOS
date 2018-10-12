@@ -139,5 +139,15 @@ public class OrderController {
         cal.add(Calendar.DATE, days); //minus number would decrement the days
         return cal.getTime();
     }
+    
+	@GetMapping("/order/{date}")
+	public String getOrderBetweenDate(@PathVariable String date) throws ParseException {
+		String result = null;
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = df.parse(date);
+		Date endDayDate = addDays(startDate,1);
+		result = gson.toJson(orderServices.findOrderByDate(startDate,endDayDate));
+		return result;
+	}
 
 }

@@ -202,7 +202,11 @@ public class UserController {
 					.getUserType() != 1) {
 				return gson.toJson(new Message("No permission."));
 			} else {
-				return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
+				if(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()).isUserStatus()==true) {
+					return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
+				}else {
+					return gson.toJson(new Message("Your account was closed."));
+				}
 			}
 		} else {
 			return gson.toJson(new Message("Wrong username or password."));
@@ -236,6 +240,7 @@ public class UserController {
 			user.setUserType(1);
 			user.setEmail("tanapone58110@gmail.com");
 			user.setAddress("298/23");
+			user.setUserStatus(true);
 			return gson.toJson(userServices.save(user));
 		} else {
 			return gson.toJson(new Message("Admin account already set."));
@@ -276,7 +281,11 @@ public class UserController {
 	@PostMapping("/login/mobile")
 	public String checkLogin(@RequestBody User user) throws NoSuchAlgorithmException {
 		if (userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()) != null) {
-			return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
+			if(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()).isUserStatus()==true) {
+				return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
+			}else {
+				return gson.toJson(new Message("Your account was closed."));
+			}
 		} else {
 			return gson.toJson(new Message("Wrong username or password."));
 		}

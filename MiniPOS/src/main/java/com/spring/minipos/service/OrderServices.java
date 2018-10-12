@@ -30,4 +30,12 @@ public class OrderServices {
 	public List<Order> getOrderBetweenDate(Date startDate,Date endDate){
 		return orderRepository.findOrderBetweenDate(startDate, endDate);
 	}
+	
+	public Order findOrderById(long id) {
+		return orderRepository.findOrderById(id);
+	}
+	
+	public List<Order> findOrderByDate(Date startDate,Date endDate){
+		return orderRepository.findOrderByDate(startDate,endDate);
+	}
 }

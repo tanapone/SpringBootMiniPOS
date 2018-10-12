@@ -14,7 +14,13 @@ public interface OrderRepository extends JpaRepository<Order, Long>{
 	
 	Order findFirstByOrderByIdDesc();
 	
-	@Query("SELECT o FROM Order o WHERE o.orderDate BETWEEN ?1 AND ?2 GROUP BY o")
+	@Query("SELECT o FROM Order o WHERE o.orderDate BETWEEN ?1 AND ?2")
 	List<Order> findOrderBetweenDate(Date startDate,Date endDate);
 	
+	@Query("SELECT o FROM Order o WHERE o.id = ?1")
+	Order findOrderById(long id);
+	
+	@Query("SELECT o FROM Order o WHERE o.orderDate BETWEEN ?1 AND ?2")
+	List<Order> findOrderByDate(Date startDate,Date endDate);
+
 }
