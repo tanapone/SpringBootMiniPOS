@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.Message;
 import com.spring.minipos.entity.Product;
+import com.spring.minipos.service.OrderServices;
 import com.spring.minipos.service.ProductServices;
 import com.spring.minipos.service.UserServices;
 
@@ -34,6 +35,9 @@ public class ProductController {
 	
 	@Autowired
 	ProductServices productServices;
+	
+	@Autowired
+	OrderServices orderServices;
 	
 	@PostMapping("create/product")
 	public String createProduct(@Valid @RequestBody Product product,
@@ -149,17 +153,25 @@ public class ProductController {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(productServices.findProductById(id)!=null) {
-						Product product = new Product();
-						product = productServices.findProductById(id);
-						productServices.delete(product);
-						result = gson.toJson(new Message("Success."));
-					}else {
-						result = gson.toJson(new Message("No user found."));
+						if(productServices.findProductById(id).getOrderDetails().size()<1) {
+							if(productServices.findProductById(id).getInvoiceDetail().size()<1) {
+								Product product = new Product();
+								product = productServices.findProductById(id);
+								productServices.delete(product);
+								result = gson.toJson(new Message("Success."));
+							}else{
+								result = gson.toJson(new Message("Product is in invoice please change product status."));
+							}
+						}else {
+							result = gson.toJson(new Message("Product is in order please change product status."));
+						}
+					}else{
+						result = gson.toJson(new Message("No product found."));
 					}
-				} else {
+				}else{
 					result = gson.toJson(new Message("No permission."));
 				}
-			} else {
+			}else{
 				result = gson.toJson(new Message("Wrong auth key."));
 			}
 		}

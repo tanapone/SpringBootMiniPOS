@@ -66,6 +66,7 @@ public class Order {
 	
 	public Order(User user) {
 		this.user = user;
+		orderDate = new Date();
 	}
 	
 	public Order(Date orderDate, User user) {
