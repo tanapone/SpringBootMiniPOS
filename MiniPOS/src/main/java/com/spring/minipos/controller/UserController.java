@@ -104,10 +104,15 @@ public class UserController {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(userServices.findUserById(id)!=null) {
-						User user = new User();
-						user = userServices.findUserById(id);
-						userServices.delete(user);
-						result = gson.toJson(new Message("Success."));
+						if(userServices.findUserById(id).getOrders().size()>0) {
+							result = gson.toJson(new Message("User is in order please change user status."));
+						}else {
+							User user = new User();
+							user = userServices.findUserById(id);
+							userServices.delete(user);
+							result = gson.toJson(new Message("Success."));
+							
+						}
 					}else {
 						result = gson.toJson(new Message("No user found."));
 					}

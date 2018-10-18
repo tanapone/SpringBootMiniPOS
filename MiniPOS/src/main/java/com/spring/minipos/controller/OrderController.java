@@ -122,13 +122,22 @@ public class OrderController {
 	
 
 	@GetMapping("/order/{startDate}/{endDate}")
-	public String getOrderBetweenDate(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
+	public String getOrderBetweenDate(@PathVariable String startDate, @PathVariable String endDate,
+			@RequestParam(value="authKey" ,required=false) String authKey) throws ParseException {
 		String result = null;
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Date startDayDate = df.parse(startDate);
-		Date endDayDate = df.parse(endDate);
-		Date realEndDayDate = addDays(endDayDate,1);
-		result = gson.toJson(orderServices.getOrderBetweenDate(startDayDate, realEndDayDate));
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				Date startDayDate = df.parse(startDate);
+				Date endDayDate = df.parse(endDate);
+				Date realEndDayDate = addDays(endDayDate,1);
+				result = gson.toJson(orderServices.getOrderBetweenDate(startDayDate, realEndDayDate));
+			}else {
+				result = new Gson().toJson(new Message("Wrong auth key."));
+			}
+		}
 		return result;
 	}
 	
@@ -149,5 +158,45 @@ public class OrderController {
 		result = gson.toJson(orderServices.findOrderByDate(startDate,endDayDate));
 		return result;
 	}
+	
+	@GetMapping("/order/quater/{quater}/{year}")
+	public String getOrderByQuater(@PathVariable int quater,@PathVariable String year,
+			@RequestParam(value="authKey" ,required=false) String authKey) throws ParseException {
+		String result = null;
+		if(authKey == null) {
+			result = new Gson().toJson(new Message("Required auth key."));
+		}else {
+			if(userServices.checkAuthKey(authKey)!=null) {
+				String fromDate = null;
+				String toDate = null;
+				
+					if(quater==1) {
+						fromDate = year+"-01-01";
+						toDate = year+"-03-31";
+					}else if(quater==2) {
+						fromDate = year+"-04-01";
+						toDate = year+"-06-31";
+					}else if(quater==3) {
+						fromDate = year+"-07-01";
+						toDate = year+"-09-30";
+					}else if(quater==4) {
+						fromDate = year+"-10-01";
+						toDate = year+"-12-31";
+					}
+					
+					DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					Date startDayDate = df.parse(fromDate);
+					Date endDayDate = df.parse(toDate);
+					Date realEndDayDate = addDays(endDayDate,1);
+					result = gson.toJson(orderServices.getOrderBetweenDate(startDayDate, realEndDayDate));
+					
+				}else {
+					result = new Gson().toJson(new Message("Wrong auth key."));
+				}
+			}
+		return result;
+		
+	}
+	
 
 }
