@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.spring.minipos.entity.Message;
+import com.spring.minipos.entity.MessageModel;
 import com.spring.minipos.entity.Product;
 import com.spring.minipos.service.OrderServices;
 import com.spring.minipos.service.ProductServices;
@@ -44,24 +44,24 @@ public class ProductController {
 			@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(productServices.findProductByProductName(product.getProductName())!=null) {
-						result = new Gson().toJson(new Message("Please change product name."));
+						result = new Gson().toJson(new MessageModel("Please change product name."));
 					}else {
 						if(productServices.findProductByProductBarcodeID(product.getProductBarcodeID())!=null) {
-							result = gson.toJson(new Message("Please change product barcode."));
+							result = gson.toJson(new MessageModel("Please change product barcode."));
 						}else {
 							result = new Gson().toJson(productServices.save(product));	
 						}
 					}
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -71,16 +71,16 @@ public class ProductController {
 	public String showAllProducts(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(productServices.findAll());
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -93,27 +93,27 @@ public class ProductController {
 		Product productByProductBarcodeID = productServices.findProductByProductBarcodeID(product.getProductBarcodeID());
 		Product productByProductName = productServices.findProductByProductName(product.getProductName());
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if (productServices.findProductById(product.getId()) != null) {
 						if (productByProductName!= null && productByProductName.getId() != product.getId()) {
-							result = gson.toJson(new Message(""
+							result = gson.toJson(new MessageModel(""
 									+ ""));
 						}else if(productByProductBarcodeID!=null && productByProductBarcodeID.getId() != product.getId()) {
-							result = gson.toJson(new Message("Please change product barcode."));
+							result = gson.toJson(new MessageModel("Please change product barcode."));
 						}else {
 							result = gson.toJson(productServices.save(product));
 						}
 					} else {
-						result = gson.toJson(new Message("no product detail."));
+						result = gson.toJson(new MessageModel("no product detail."));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -124,20 +124,20 @@ public class ProductController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(productServices.findProductById(id)!=null) {
 						result = gson.toJson(productServices.findProductById(id));
 					}else {
-						result = gson.toJson(new Message("No product found."));
+						result = gson.toJson(new MessageModel("No product found."));
 					}
 				}else{
-					result = gson.toJson(new Message("No permission."));	
+					result = gson.toJson(new MessageModel("No permission."));	
 				}
 			}else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -148,7 +148,7 @@ public class ProductController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
@@ -158,21 +158,21 @@ public class ProductController {
 								Product product = new Product();
 								product = productServices.findProductById(id);
 								productServices.delete(product);
-								result = gson.toJson(new Message("Success."));
+								result = gson.toJson(new MessageModel("Success."));
 							}else{
-								result = gson.toJson(new Message("Product is in invoice please change product status."));
+								result = gson.toJson(new MessageModel("Product is in invoice please change product status."));
 							}
 						}else {
-							result = gson.toJson(new Message("Product is in order please change product status."));
+							result = gson.toJson(new MessageModel("Product is in order please change product status."));
 						}
 					}else{
-						result = gson.toJson(new Message("No product found."));
+						result = gson.toJson(new MessageModel("No product found."));
 					}
 				}else{
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			}else{
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 
@@ -183,16 +183,16 @@ public class ProductController {
 	public String showAllLessProducts(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(productServices.findLessProducts());
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -203,12 +203,12 @@ public class ProductController {
 	public String showAllProductsMobile(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 					result = gson.toJson(productServices.findAll());
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -218,12 +218,12 @@ public class ProductController {
 	public String showAllLessProductsMobile(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 					result = gson.toJson(productServices.findLessProductsMobile());
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -233,12 +233,12 @@ public class ProductController {
 	public String findAllProductLikeName(@RequestParam(value="authKey" ,required=false) String authKey,@RequestParam(value="name" ,required=true) String searchName) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				result = gson.toJson(productServices.findProductByName(searchName));
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 	return result;
@@ -249,16 +249,16 @@ public class ProductController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 					if(productServices.findProductById(id)!=null) {
 						result = gson.toJson(productServices.findProductById(id));
 					}else {
-						result = gson.toJson(new Message("No product found."));
+						result = gson.toJson(new MessageModel("No product found."));
 					}
 			}else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -269,16 +269,16 @@ public class ProductController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 					if(productServices.findProductById(id)!=null) {
 						result = gson.toJson(productServices.findProductByCategory(id));
 					}else {
-						result = gson.toJson(new Message("No product found."));
+						result = gson.toJson(new MessageModel("No product found."));
 					}
 			}else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -289,16 +289,16 @@ public class ProductController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 					if(productServices.findProductById(id)!=null) {
 						result = gson.toJson(productServices.findProductByCategory(id));
 					}else {
-						result = gson.toJson(new Message("No product found."));
+						result = gson.toJson(new MessageModel("No product found."));
 					}
 			}else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -310,12 +310,12 @@ public class ProductController {
 			@RequestParam(value="barcodeID" ,required=true) String barcodeID) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				result = gson.toJson(productServices.findProductByProductBarcodeID(barcodeID));
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 	return result;

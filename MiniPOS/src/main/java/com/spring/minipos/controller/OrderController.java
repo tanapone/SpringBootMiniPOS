@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.spring.minipos.entity.Message;
+import com.spring.minipos.entity.MessageModel;
 import com.spring.minipos.entity.Order;
 import com.spring.minipos.entity.OrderDetail;
 import com.spring.minipos.entity.Product;
@@ -51,7 +51,7 @@ public class OrderController {
 				String result = null;
 				
 				if(authKey == null){
-					result = new Gson().toJson(new Message("Required auth key."));
+					result = new Gson().toJson(new MessageModel("Required auth key."));
 				}else{
 					if(userServices.checkAuthKey(authKey)!=null){
 						Order newOrder = new Order((userServices.checkAuthKey(authKey)));
@@ -79,10 +79,10 @@ public class OrderController {
 							newOrder.setSumPrice(sumPrice);
 							newOrder.setProfit(profit);
 							orderServices.save(newOrder);
-							result = gson.toJson(new Message("Success"));
+							result = gson.toJson(new MessageModel("Success"));
 						
 					}else{
-						result = new Gson().toJson(new Message("Wrong auth key."));
+						result = new Gson().toJson(new MessageModel("Wrong auth key."));
 					}
 				}
 				
@@ -94,12 +94,12 @@ public class OrderController {
 	public String showAllOrders(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				result = gson.toJson(orderServices.findAll());
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -109,12 +109,12 @@ public class OrderController {
 	public String getLastOrder(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				result = gson.toJson(orderServices.getLast());
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -126,7 +126,7 @@ public class OrderController {
 			@RequestParam(value="authKey" ,required=false) String authKey) throws ParseException {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -135,7 +135,7 @@ public class OrderController {
 				Date realEndDayDate = addDays(endDayDate,1);
 				result = gson.toJson(orderServices.getOrderBetweenDate(startDayDate, realEndDayDate));
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -164,7 +164,7 @@ public class OrderController {
 			@RequestParam(value="authKey" ,required=false) String authKey) throws ParseException {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				String fromDate = null;
@@ -191,7 +191,7 @@ public class OrderController {
 					result = gson.toJson(orderServices.getOrderBetweenDate(startDayDate, realEndDayDate));
 					
 				}else {
-					result = new Gson().toJson(new Message("Wrong auth key."));
+					result = new Gson().toJson(new MessageModel("Wrong auth key."));
 				}
 			}
 		return result;

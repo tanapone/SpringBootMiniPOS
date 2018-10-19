@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.spring.minipos.entity.Message;
+import com.spring.minipos.entity.MessageModel;
 
 @RestController
 @RequestMapping("/services")
@@ -16,7 +16,7 @@ public class TestWSConnectController {
 	@GetMapping("testConnector")
 	public String testConnector() {
 		String result = "";
-		result = new Gson().toJson(new Message("Connected"));
+		result = new Gson().toJson(new MessageModel("Connected"));
 		return result;
 	}
 }

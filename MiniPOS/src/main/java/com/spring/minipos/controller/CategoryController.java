@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.Category;
-import com.spring.minipos.entity.Message;
+import com.spring.minipos.entity.MessageModel;
 import com.spring.minipos.service.CategoryServices;
 import com.spring.minipos.service.UserServices;
 
@@ -38,7 +38,7 @@ public class CategoryController {
 			@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
@@ -46,15 +46,15 @@ public class CategoryController {
 							.stream().filter(x->category.getCategoryName()
 									.equals(x.getCategoryName())
 									).findAny().orElse(null) != null) {
-						result = new Gson().toJson(new Message("Please change category name."));
+						result = new Gson().toJson(new MessageModel("Please change category name."));
 					}else {
 						result = new Gson().toJson(categoryServices.save(category));	
 					}
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -64,16 +64,16 @@ public class CategoryController {
 	public String showAllCategories(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result =  gson.toJson(categoryServices.findAll()); 
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -85,24 +85,24 @@ public class CategoryController {
 		String result = null;
 		Category categoryByUsername = categoryServices.findCategoryByName(category.getCategoryName());
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if (categoryServices.findCategoryById(category.getId()) != null) {
 						if (categoryByUsername!= null && categoryByUsername.getId() != category.getId()) {
-							result = gson.toJson(new Message("Please change category name."));
+							result = gson.toJson(new MessageModel("Please change category name."));
 						} else {
 							result = gson.toJson(categoryServices.save(category));
 						}
 					} else {
-						result = gson.toJson(new Message("no category detail."));
+						result = gson.toJson(new MessageModel("no category detail."));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -113,16 +113,16 @@ public class CategoryController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if(categoryServices.findCategoryById(id) !=null) {
 					result = gson.toJson(categoryServices.findCategoryById(id));
 				}else {
-					result = gson.toJson(new Message("no category detail."));
+					result = gson.toJson(new MessageModel("no category detail."));
 				}
 			}else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -134,27 +134,27 @@ public class CategoryController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(categoryServices.findCategoryById(id) !=null) {
 						if(categoryServices.findCategoryById(id).getProducts().size()>0) {
-							result = gson.toJson(new Message("This category still have products."));
+							result = gson.toJson(new MessageModel("This category still have products."));
 						}else {
 							Category category = new Category();
 							category = categoryServices.findCategoryById(id);
 							categoryServices.delete(category);
-							result = gson.toJson(new Message("Success."));
+							result = gson.toJson(new MessageModel("Success."));
 						}
 					}else {
-						result = gson.toJson(new Message("no category detail."));
+						result = gson.toJson(new MessageModel("no category detail."));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 
@@ -167,12 +167,12 @@ public class CategoryController {
 	public String showAllCategoriesMobile(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 					result =  gson.toJson(categoryServices.findAll()); 
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;

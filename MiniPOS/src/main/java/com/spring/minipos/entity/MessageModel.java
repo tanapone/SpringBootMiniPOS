@@ -2,11 +2,11 @@ package com.spring.minipos.entity;
 
 import com.google.gson.annotations.Expose;
 
-public class Message {
+public class MessageModel {
 	@Expose
 	private String message;
 	
-	public Message(String message) {
+	public MessageModel(String message) {
 		this.message = message;
 	}
 

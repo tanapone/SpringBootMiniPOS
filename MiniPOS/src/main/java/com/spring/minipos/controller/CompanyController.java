@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.Company;
-import com.spring.minipos.entity.Message;
+import com.spring.minipos.entity.MessageModel;
 import com.spring.minipos.service.CompanyServices;
 import com.spring.minipos.service.UserServices;
 
@@ -39,20 +39,20 @@ public class CompanyController {
 			@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(companyService.findCompanyByName(company.getCompanyName())!=null) {
-						result = new Gson().toJson(new Message("Please change company name."));
+						result = new Gson().toJson(new MessageModel("Please change company name."));
 						}else {
 							result = new Gson().toJson(companyService.save(company));
 						}
 					}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -64,24 +64,24 @@ public class CompanyController {
 		String result = null;
 		Company companyByUsername = companyService.findCompanyByName(company.getCompanyName());
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if (companyService.findCompanyById(company.getId()) != null) {
 						if (companyByUsername!= null && companyByUsername.getId() != company.getId()) {
-							result = gson.toJson(new Message("Please change company name."));
+							result = gson.toJson(new MessageModel("Please change company name."));
 						} else {
 							result = gson.toJson(companyService.save(company));
 						}
 					} else {
-						result = gson.toJson(new Message("no company detail."));
+						result = gson.toJson(new MessageModel("no company detail."));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -91,16 +91,16 @@ public class CompanyController {
 	public String showAllCompanies(@RequestParam(value="authKey" ,required=false) String authKey) {
 		String result = null;
 		if(authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		}else {
 			if(userServices.checkAuthKey(authKey)!=null) {
 				if(userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(companyService.findAll());
 				}else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			}else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -111,20 +111,20 @@ public class CompanyController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(companyService.findCompanyById(id)!=null) {
 						result = gson.toJson(companyService.findCompanyById(id));
 					}else {
-						result = gson.toJson(new Message("no company detail."));
+						result = gson.toJson(new MessageModel("no company detail."));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -135,27 +135,27 @@ public class CompanyController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(companyService.findCompanyById(id)!=null) {
 						if(companyService.findCompanyById(id).getProducts().size()>0) {
-							result = gson.toJson(new Message("This company still have products."));
+							result = gson.toJson(new MessageModel("This company still have products."));
 						}else {
 							Company company = new Company();
 							company = companyService.findCompanyById(id);
 							companyService.delete(company);
-							result = gson.toJson(new Message("Success."));
+							result = gson.toJson(new MessageModel("Success."));
 						}
 					}else {
-						result = gson.toJson(new Message("no company detail."));
+						result = gson.toJson(new MessageModel("no company detail."));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 

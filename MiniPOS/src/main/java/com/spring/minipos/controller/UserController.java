@@ -2,7 +2,16 @@ package com.spring.minipos.controller;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.util.Date;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.MD5;
-import com.spring.minipos.entity.Message;
+import com.spring.minipos.entity.MessageModel;
 import com.spring.minipos.entity.User;
 import com.spring.minipos.service.UserServices;
 
@@ -37,24 +46,24 @@ public class UserController {
 			@RequestParam(value = "authKey", required = false) String authKey) throws NoSuchAlgorithmException {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if (userServices.findUserByUsername(user.getUsername()) != null) {
-						result = gson.toJson(new Message("Please change username."));
+						result = gson.toJson(new MessageModel("Please change username."));
 					} else if (userServices.findUserByEmail(user.getEmail()) != null) {
-						result = gson.toJson(new Message("Please change email."));
+						result = gson.toJson(new MessageModel("Please change email."));
 					} else {
 						String encodePassword = new MD5(user.getPassword()).Encoding();
 						user.setPassword(encodePassword);
 						result = gson.toJson(userServices.save(user));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 
@@ -68,26 +77,26 @@ public class UserController {
 		User userByUsername = userServices.findUserByUsername(user.getUsername());
 		User userByEmail = userServices.findUserByEmail(user.getEmail());
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if (userServices.findUserById(user.getId()) != null) {
 						if (userByUsername!= null && userByUsername.getId() != user.getId()) {
-							result = gson.toJson(new Message("Please change username."));
+							result = gson.toJson(new MessageModel("Please change username."));
 						} else if (userByEmail != null && userByEmail.getId() != user.getId()) {
-							result = gson.toJson(new Message("Please change email."));
+							result = gson.toJson(new MessageModel("Please change email."));
 						} else {
 							result = gson.toJson(userServices.save(user));
 						}
 					} else {
-						result = gson.toJson(new Message("no user detail."));
+						result = gson.toJson(new MessageModel("no user detail."));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 
@@ -99,28 +108,28 @@ public class UserController {
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					if(userServices.findUserById(id)!=null) {
 						if(userServices.findUserById(id).getOrders().size()>0) {
-							result = gson.toJson(new Message("User is in order please change user status."));
+							result = gson.toJson(new MessageModel("User is in order please change user status."));
 						}else {
 							User user = new User();
 							user = userServices.findUserById(id);
 							userServices.delete(user);
-							result = gson.toJson(new Message("Success."));
+							result = gson.toJson(new MessageModel("Success."));
 							
 						}
 					}else {
-						result = gson.toJson(new Message("No user found."));
+						result = gson.toJson(new MessageModel("No user found."));
 					}
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 
@@ -131,16 +140,16 @@ public class UserController {
 	public String showAllUsers(@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(userServices.findAll());
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 
@@ -152,7 +161,7 @@ public class UserController {
 		if (userServices.findUserById(id) != null) {
 			return gson.toJson(userServices.findUserById(id));
 		} else {
-			return gson.toJson(new Message("User not found."));
+			return gson.toJson(new MessageModel("User not found."));
 		}
 	}
 
@@ -162,16 +171,16 @@ public class UserController {
 		String result = null;
 
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(userServices.findUserByUsername(username));
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -184,16 +193,16 @@ public class UserController {
 		String result = null;
 
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(userServices.findUserByEmail(email));
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -205,16 +214,16 @@ public class UserController {
 		if (userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()) != null) {
 			if (userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding())
 					.getUserType() != 1) {
-				return gson.toJson(new Message("No permission."));
+				return gson.toJson(new MessageModel("No permission."));
 			} else {
 				if(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()).isUserStatus()==true) {
 					return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
 				}else {
-					return gson.toJson(new Message("Your account was closed."));
+					return gson.toJson(new MessageModel("Your account was closed."));
 				}
 			}
 		} else {
-			return gson.toJson(new Message("Wrong username or password."));
+			return gson.toJson(new MessageModel("Wrong username or password."));
 		}
 	}
 
@@ -222,12 +231,12 @@ public class UserController {
 	public String getUserByAuthKey(@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				result = gson.toJson(userServices.checkAuthKey(authKey));
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -248,7 +257,7 @@ public class UserController {
 			user.setUserStatus(true);
 			return gson.toJson(userServices.save(user));
 		} else {
-			return gson.toJson(new Message("Admin account already set."));
+			return gson.toJson(new MessageModel("Admin account already set."));
 		}
 
 	}
@@ -257,12 +266,12 @@ public class UserController {
 	public String getLastUser(@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				result = gson.toJson(userServices.getLastUser());
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -275,9 +284,9 @@ public class UserController {
 					String encodingPassword = new MD5(user.getPassword()).Encoding();
 					user.setPassword(encodingPassword);
 					userServices.save(user);
-					result = gson.toJson(new Message("Success."));
+					result = gson.toJson(new MessageModel("Success."));
 				}else {
-					result = gson.toJson(new Message("No user found."));
+					result = gson.toJson(new MessageModel("No user found."));
 				}
 		return result;
 	}
@@ -289,11 +298,65 @@ public class UserController {
 			if(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()).isUserStatus()==true) {
 				return gson.toJson(userServices.checkLogin(user.getUsername(), new MD5(user.getPassword()).Encoding()));
 			}else {
-				return gson.toJson(new Message("Your account was closed."));
+				return gson.toJson(new MessageModel("Your account was closed."));
 			}
 		} else {
-			return gson.toJson(new Message("Wrong username or password."));
+			return gson.toJson(new MessageModel("Wrong username or password."));
 		}
 	}
 
+	@GetMapping("/user/sentResetPassword")
+	public String sentResetPasswordUrlToMail(@RequestParam(value = "email", required = false) String email) {
+		String result = null;
+			if(email == null) {
+				result = new Gson().toJson(new MessageModel("Required email."));
+			}else {
+				if(userServices.findUserByEmail(email)!=null) {
+					try{
+			            String host ="smtp.gmail.com" ;
+			            String user = "tanapone58110@gmail.com";
+			            String pass = "zvaynveqfenzhvtz";
+			            String to = userServices.findUserByEmail(email).getEmail();
+			            String from = "tanapone58110@gmail.com";
+			            String subject = "ลิงค์สำหรับแก้ไขรหัสผ่าน - MiniPOS";
+			            String messageText = "ขอบคุณ คุณ "+userServices.findUserByEmail(email).getFirstName()
+			            		+" ที่ใช้บริการ MiniPOS นี่คือลิงค์สำหรับเปลี่ยนรหัสผ่านใหม่ "
+			            		+ ": http://localhost:4200/reset-user-password?authKey="+userServices.findUserByEmail(email).getAuthKey();
+			            boolean sessionDebug = false;
+
+			            Properties props = System.getProperties();
+
+			            props.put("mail.smtp.starttls.enable", "true");
+			            props.put("mail.smtp.host", host);
+			            props.put("mail.smtp.port", "587");
+			            props.put("mail.smtp.auth", "true");
+			            props.put("mail.smtp.starttls.required", "true");
+
+			            java.security.Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+			            Session mailSession = Session.getDefaultInstance(props, null);
+			            mailSession.setDebug(sessionDebug);
+			            Message msg = new MimeMessage(mailSession);
+			            msg.setFrom(new InternetAddress(from));
+			            InternetAddress[] address = {new InternetAddress(to)};
+			            msg.setRecipients(Message.RecipientType.TO, address);
+			            msg.setSubject(subject); msg.setSentDate(new Date());
+			            msg.setText(messageText);
+
+			           Transport transport=mailSession.getTransport("smtp");
+			           transport.connect(host, user, pass);
+			           transport.sendMessage(msg, msg.getAllRecipients());
+			           transport.close();
+			     
+			           result = gson.toJson(new MessageModel("Success."));
+			        }catch(Exception ex)
+			        {
+			            System.out.println(ex);
+			        }
+				}else {
+					result = new Gson().toJson(new MessageModel("Wrong email."));
+				}
+			}
+		return result;
+	}
+	
 }

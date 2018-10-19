@@ -17,7 +17,7 @@ import com.google.gson.GsonBuilder;
 import com.spring.minipos.entity.Company;
 import com.spring.minipos.entity.Invoice;
 import com.spring.minipos.entity.InvoiceDetail;
-import com.spring.minipos.entity.Message;
+import com.spring.minipos.entity.MessageModel;
 import com.spring.minipos.entity.Product;
 import com.spring.minipos.repository.InvoiceRepository;
 import com.spring.minipos.service.InvoiceServices;
@@ -45,7 +45,7 @@ public class InvoiceController {
 			@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
@@ -58,10 +58,10 @@ public class InvoiceController {
 					result = gson.toJson(invoiceService.save(newInvoice));
 
 				} else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -71,16 +71,16 @@ public class InvoiceController {
 	public String showAllInvoices(@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(invoiceService.findAll());
 				} else {
-					result = gson.toJson(new Message("No permission."));
+					result = gson.toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = gson.toJson(new Message("Wrong auth key."));
+				result = gson.toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -91,16 +91,16 @@ public class InvoiceController {
 			@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					result = gson.toJson(invoiceService.findInvoiceById(id));
 				} else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
@@ -112,7 +112,7 @@ public class InvoiceController {
 
 		String result = null;
 		if (authKey == null) {
-			result = new Gson().toJson(new Message("Required auth key."));
+			result = new Gson().toJson(new MessageModel("Required auth key."));
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
@@ -132,10 +132,10 @@ public class InvoiceController {
 					result = gson.toJson(invoiceService.save(newInvoice));
 
 				} else {
-					result = new Gson().toJson(new Message("No permission."));
+					result = new Gson().toJson(new MessageModel("No permission."));
 				}
 			} else {
-				result = new Gson().toJson(new Message("Wrong auth key."));
+				result = new Gson().toJson(new MessageModel("Wrong auth key."));
 			}
 		}
 		return result;
