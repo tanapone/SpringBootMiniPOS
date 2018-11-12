@@ -20,13 +20,12 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Expose
-	@Column(name="category_id")
+	@Column(name="category_id",nullable=false,length = 20)
 	private long id;
 	
 	@Expose
-	@Column(name="category_name",unique = true,nullable = false)
+	@Column(name="category_name",unique = true,nullable = false ,length = 50)
 	private String categoryName;
-	
 	
 	@OneToMany(cascade = CascadeType.ALL,mappedBy="category")
 	private List<Product> products;

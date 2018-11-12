@@ -48,7 +48,8 @@ public class CategoryController {
 									).findAny().orElse(null) != null) {
 						result = new Gson().toJson(new MessageModel("Please change category name."));
 					}else {
-						result = new Gson().toJson(categoryServices.save(category));	
+						categoryServices.save(category);
+						result = new Gson().toJson(new MessageModel("Success."));	
 					}
 				}else {
 					result = new Gson().toJson(new MessageModel("No permission."));
@@ -93,7 +94,8 @@ public class CategoryController {
 						if (categoryByUsername!= null && categoryByUsername.getId() != category.getId()) {
 							result = gson.toJson(new MessageModel("Please change category name."));
 						} else {
-							result = gson.toJson(categoryServices.save(category));
+							categoryServices.save(category);
+							result = new Gson().toJson(new MessageModel("Success."));	
 						}
 					} else {
 						result = gson.toJson(new MessageModel("no category detail."));

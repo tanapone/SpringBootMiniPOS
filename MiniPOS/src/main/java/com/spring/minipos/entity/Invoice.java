@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -24,18 +26,19 @@ public class Invoice {
 	@Expose
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="invoice_id")
+	@Column(name="invoice_id",nullable=false,length = 20)
 	private long id;
 	
 	@Expose
 	@Temporal(TemporalType.DATE)
-	@Column(name="invoiceDate",columnDefinition="DATETIME")
+	@Column(name="invoiceDate",columnDefinition="DATETIME",nullable=false,length = 60)
 	private Date invoiceDate = new Date();
 
 	@Expose
-	@Column(name="sumPrice")
-	private double sumPrice;
-
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name="company_id")
+	private Company company;
+	
 	@Expose
 	@OneToMany(mappedBy="invoice",cascade = CascadeType.ALL)
 	private List<InvoiceDetail> invoiceDetails = new ArrayList<InvoiceDetail>(); 
@@ -56,14 +59,6 @@ public class Invoice {
 		this.invoiceDate = invoiceDate;
 	}
 
-	public double getSumPrice() {
-		return sumPrice;
-	}
-
-	public void setSumPrice(double sumPrice) {
-		this.sumPrice = sumPrice;
-	}
-
 	public List<InvoiceDetail> getInvoiceDetails() {
 		return invoiceDetails;
 	}
@@ -71,7 +66,14 @@ public class Invoice {
 	public void setInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
 		this.invoiceDetails = invoiceDetails;
 	}
-	
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	
 	
 }

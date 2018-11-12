@@ -56,15 +56,9 @@ public class OrderController {
 					if(userServices.checkAuthKey(authKey)!=null){
 						Order newOrder = new Order((userServices.checkAuthKey(authKey)));
 						newOrder.setOrderDetails(order.getOrderDetails());
-						double sumPrice = 0;
-						double profit = 0;
+	
 						for(OrderDetail orderDetails: newOrder.getOrderDetails()) {
 							orderDetails.setOrder(newOrder);
-							//Calculate 
-							double newSumPrice = orderDetails.getProduct().getProductSalePrice() * orderDetails.getProductAmount();
-							double newProfit = newSumPrice - (orderDetails.getProduct().getProductCapitalPrice() * orderDetails.getProductAmount()); 
-							sumPrice+=newSumPrice;
-							profit+=newProfit;
 							//UpdateStock
 							Product product = new Product();
 							product = productServices.findProductById(orderDetails.getProduct().getId());
@@ -72,12 +66,13 @@ public class OrderController {
 							int newQty = oldQty - orderDetails.getProductAmount();
 							product.setProductQty(newQty);
 							orderDetails.setProduct(product);
+							orderDetails.setProductCaptialPrice(product.getProductCapitalPrice());
+							orderDetails.setProductSalePrice(product.getProductSalePrice());
 							newOrder.setUser(userServices.checkAuthKey(authKey));
 							productServices.save(orderDetails.getProduct());
 							
 						}	
-							newOrder.setSumPrice(sumPrice);
-							newOrder.setProfit(profit);
+
 							orderServices.save(newOrder);
 							result = gson.toJson(new MessageModel("Success"));
 						

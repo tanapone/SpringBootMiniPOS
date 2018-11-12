@@ -9,9 +9,6 @@ import com.spring.minipos.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	
-	@Query("SELECT u FROM User u WHERE u.id = ?1")
-	User findUserById(long id);
-	
 	@Query("SELECT u FROM User u WHERE u.username = ?1")
 	User findUserByUser(String username);
 	
@@ -24,5 +21,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.email =?1")
 	User findUserByEmail(String email);
 	
-	User findFirstByOrderByIdDesc();
+//	User findFirstByOrderByIdDesc();
 }

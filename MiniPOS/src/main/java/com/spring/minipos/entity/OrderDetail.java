@@ -29,15 +29,24 @@ public class OrderDetail implements Serializable{
     
     @Id
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",nullable=false)
     @Expose
 	private Product product;
     
     @Expose
-    @Column(name = "product_amount")
+    @Column(name = "product_amount",nullable=false)
     private int productAmount;
     
-	public Order getOrder() {
+    @Expose
+    @Column(name = "product_capital_price",nullable=false)
+    private double productCaptialPrice;
+    
+    @Expose
+    @Column(name = "product_sale_price",nullable=false)
+    private double productSalePrice;
+    
+    
+    public Order getOrder() {
 		return order;
 	}
 
@@ -60,5 +69,26 @@ public class OrderDetail implements Serializable{
 	public void setProductAmount(int productAmount) {
 		this.productAmount = productAmount;
 	}
+
+	public double getProductCaptialPrice() {
+		return productCaptialPrice;
+	}
+
+	public void setProductCaptialPrice(double productCaptialPrice) {
+		this.productCaptialPrice = productCaptialPrice;
+	}
+
+	public double getProductSalePrice() {
+		return productSalePrice;
+	}
+
+	public void setProductSalePrice(double productSalePrice) {
+		this.productSalePrice = productSalePrice;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 	
 }

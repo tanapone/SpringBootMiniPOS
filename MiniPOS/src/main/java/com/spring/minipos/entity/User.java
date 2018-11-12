@@ -25,50 +25,46 @@ import com.google.gson.annotations.Expose;
 //query = "SELECT u FROM User u WHERE u.id = ?1")
 public class User {
 	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="user_id")
-	@Expose
-	private long id;
-	
-	@Column(name="username",unique=true,nullable=false)
+	@Column(name="username",unique=true,nullable=false ,length = 30)
 	@Expose
 	private String username;
 	
-	@Column(name="password",nullable=false)
+	@Column(name="password",nullable=false,length = 100)
 	@Expose
 	private String password;
 	
-	@Column(name="user_type",nullable=false)
+	@Column(name="user_type",nullable=false,length = 20)
 	@Expose
 	private int userType;
 	
-	@Column(name="user_firstname",nullable=false)
+	@Column(name="user_firstname",nullable=false,length = 60)
 	@Expose
 	private String firstName;
 	
-	@Column(name="user_lastname",nullable=false)
+	@Column(name="user_lastname",nullable=false,length = 60)
 	@Expose
 	private String lastName;
 	
-	@Column(name="user_email",nullable=false,unique=true)
+	@Column(name="user_email",nullable=false,unique=true,length = 100)
 	@Expose
 	private String email;
 	
-	@Column(name="user_phone_number",nullable=false)
+	@Column(name="user_phone_number",nullable=false,length = 13)
 	@Expose
 	private String phoneNumber;
 	
-	@Column(name="user_address",nullable=false)
+	@Column(name="user_address",nullable=false,length = 255)
 	@Expose
 	private String address;
 	
-	@Column(name="user_status")
+	@Column(name="user_status",length = 5,nullable=false)
 	@Type(type="true_false")
 	@Expose
 	private boolean userStatus;
 		
-	@Column(name="authKey")
+	@Column(name="authKey",nullable=false,length = 100)
 	@Expose
 	private String authKey;
 	
@@ -90,14 +86,6 @@ public class User {
 		this.phoneNumber = phoneNumber;
 		this.address = address;
 		this.userStatus = userStatus;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public String getUsername() {
@@ -191,6 +179,7 @@ public class User {
 	public void setAuthKey(String authKey) {
 		this.authKey = authKey;
 	}
-
+	
 	
 }
+

@@ -21,29 +21,31 @@ public class Company {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Expose
-	@Column(name="company_id")
+	@Column(name="company_id",length = 20)
 	private long id;
 	
 	@Expose
 	@NotBlank
-	@Column(name="company_name",nullable=false,unique=true)
+	@Column(name="company_name",nullable=false,unique=true,length = 120)
 	private String companyName;
 	
 	@Expose
-	@Column(name="company_phone_number",nullable=false)
+	@Column(name="company_phone_number",nullable=false,length = 12)
 	private String companyPhoneNumber;
 	
 	@Expose
-	@Column(name="company_email",nullable=false)
+	@Column(name="company_email",nullable=false,length = 100)
 	private String companyEmail;
 	
 	@Expose
-	@Column(name="company_address",nullable=false)
+	@Column(name="company_address",nullable=false,length = 255)
 	private String companyAddress;
 	
-
 	@OneToMany(cascade = CascadeType.ALL,mappedBy="company")
 	private List<Product> products;
+	
+	@OneToMany(cascade = CascadeType.ALL,mappedBy="company")
+	private List<Invoice> invocies;
 	
 	public Company() {}
 	
@@ -113,7 +115,14 @@ public class Company {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-	
+
+	public List<Invoice> getInvocies() {
+		return invocies;
+	}
+
+	public void setInvocies(List<Invoice> invocies) {
+		this.invocies = invocies;
+	}
 	
 	
 }

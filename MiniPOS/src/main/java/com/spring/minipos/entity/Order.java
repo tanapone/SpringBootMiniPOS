@@ -32,13 +32,13 @@ public class Order {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="order_id")
+	@Column(name="order_id",nullable=false,length = 20)
 	@Expose
 	private long id;
 	
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="order_date",columnDefinition="DATETIME")
+	@Column(name="order_date",columnDefinition="DATETIME",nullable=false,length = 60)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:00", timezone="CER")
 	@Expose
 	private Date orderDate;
@@ -51,14 +51,6 @@ public class Order {
 	@OneToMany(mappedBy="order",cascade = CascadeType.ALL)
 	@Expose
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
-	
-	@Expose
-	@Column(name="order_sum_price")
-	private double sumPrice;
-	
-	@Expose
-	@Column(name="order_profit")
-	private double profit;
 	
 	public Order() {
 		orderDate = new Date();
@@ -113,22 +105,7 @@ public class Order {
 	public void setOrderDetails(List<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
-
-	public double getSumPrice() {
-		return sumPrice;
-	}
-
-	public void setSumPrice(double sumPrice) {
-		this.sumPrice = sumPrice;
-	}
-
-	public double getProfit() {
-		return profit;
-	}
-
-	public void setProfit(double profit) {
-		this.profit = profit;
-	}
+	
 	
 	
 }

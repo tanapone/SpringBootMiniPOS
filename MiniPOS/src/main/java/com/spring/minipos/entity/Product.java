@@ -25,31 +25,31 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Expose
-	@Column(name="product_id")
+	@Column(name="product_id",nullable=false,length = 20)
 	private long id;
 	
 	@Expose
-	@Column(name="product_name")
+	@Column(name="product_name",nullable=false,length = 100)
 	private String productName;
 	
 	@Expose
-	@Column(name="product_barcode_id")
+	@Column(name="product_barcode_id",nullable=false,length = 30)
 	private String productBarcodeID;
 	
 	@Expose
-	@Column(name="product_capital_price")
+	@Column(name="product_capital_price",nullable=false,length = 10)
 	private double productCapitalPrice;
 	
 	@Expose
-	@Column(name="product_sale_price")
+	@Column(name="product_sale_price",nullable=false,length = 10)
 	private double productSalePrice;
 
 	@Expose
-	@Column(name="product_minimum")
+	@Column(name="product_minimum",nullable=false,length = 5)
 	private int productMinimum;
 	
 	@Expose
-	@Column(name="product_qty")
+	@Column(name="product_qty",nullable=false,length = 5)
 	private int productQty;
 	
 	@Expose
@@ -63,7 +63,7 @@ public class Product {
 	private Company company;
 
 	@Expose
-	@Column(name="product_statuts")
+	@Column(name="product_statuts",length = 5)
 	@Type(type="true_false")
 	private boolean productStatus;
 	

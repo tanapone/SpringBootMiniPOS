@@ -51,11 +51,13 @@ public class InvoiceController {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
 					Invoice newInvoice = new Invoice();
 					newInvoice.setInvoiceDetails(invoice.getInvoiceDetails());
+					newInvoice.setCompany(invoice.getInvoiceDetails().get(0).getProduct().getCompany());
 					for (InvoiceDetail invoiceDetails : invoice.getInvoiceDetails()) {
 						invoiceDetails.setInvoice(newInvoice);
+						
 					}
-					newInvoice.setSumPrice(invoice.getSumPrice());
-					result = gson.toJson(invoiceService.save(newInvoice));
+					invoiceService.save(newInvoice);
+					result = gson.toJson(new MessageModel("Success."));
 
 				} else {
 					result = new Gson().toJson(new MessageModel("No permission."));
@@ -120,16 +122,25 @@ public class InvoiceController {
 					Invoice newInvoice = invoiceService.findInvoiceById(invoice.getId());
 					
 					for(int i=0;i<newInvoice.getInvoiceDetails().size();i++) {
-						if(newInvoice.getInvoiceDetails().get(i).getProductIn()!=true && invoice.getInvoiceDetails().get(i).getProductIn()==true) {
+						//Check if invoice detail is not filled and invoice detail query is not equal invoice detail in
+						if(newInvoice.getInvoiceDetails().get(i).getProductInQuantity() != newInvoice.getInvoiceDetails().get(i).getQuantity()
+								&& newInvoice.getInvoiceDetails().get(i).getProductInQuantity()!=invoice.getInvoiceDetails().get(i).getProductInQuantity()) {
+							//Get product to update
 							Product product = productServices.findProductById(newInvoice.getInvoiceDetails().get(i).getProduct().getId());
-							int newProductQty = (product.getProductQty() + newInvoice.getInvoiceDetails().get(i).getQuantity());
-							newInvoice.getInvoiceDetails().get(i).setProductIn(invoice.getInvoiceDetails().get(i).getProductIn());
+							//Cal new product qty
+							int calQty = invoice.getInvoiceDetails().get(i).getProductInQuantity() - newInvoice.getInvoiceDetails().get(i).getProductInQuantity();
+							if(calQty<0) {
+								calQty = 0;
+							}
+							int newProductQty = (product.getProductQty() + calQty);
+							
+							newInvoice.getInvoiceDetails().get(i).setProductInQuantity(invoice.getInvoiceDetails().get(i).getProductInQuantity());
 							product.setProductQty(newProductQty);
 							productServices.save(product);
 						}
 					}
-					
-					result = gson.toJson(invoiceService.save(newInvoice));
+					gson.toJson(invoiceService.save(newInvoice));
+					result = gson.toJson(new MessageModel("Success."));
 
 				} else {
 					result = new Gson().toJson(new MessageModel("No permission."));

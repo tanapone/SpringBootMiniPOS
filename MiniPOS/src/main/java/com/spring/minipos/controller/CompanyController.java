@@ -46,7 +46,8 @@ public class CompanyController {
 					if(companyService.findCompanyByName(company.getCompanyName())!=null) {
 						result = new Gson().toJson(new MessageModel("Please change company name."));
 						}else {
-							result = new Gson().toJson(companyService.save(company));
+							companyService.save(company);
+							result = gson.toJson(new MessageModel("Success."));
 						}
 					}else {
 					result = new Gson().toJson(new MessageModel("No permission."));
@@ -72,7 +73,8 @@ public class CompanyController {
 						if (companyByUsername!= null && companyByUsername.getId() != company.getId()) {
 							result = gson.toJson(new MessageModel("Please change company name."));
 						} else {
-							result = gson.toJson(companyService.save(company));
+							companyService.save(company);
+							result = gson.toJson(new MessageModel("Success."));
 						}
 					} else {
 						result = gson.toJson(new MessageModel("no company detail."));

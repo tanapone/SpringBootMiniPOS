@@ -57,7 +57,8 @@ public class UserController {
 					} else {
 						String encodePassword = new MD5(user.getPassword()).Encoding();
 						user.setPassword(encodePassword);
-						result = gson.toJson(userServices.save(user));
+						userServices.save(user);
+						result = gson.toJson(new MessageModel("Success."));
 					}
 				} else {
 					result = gson.toJson(new MessageModel("No permission."));
@@ -81,13 +82,16 @@ public class UserController {
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
-					if (userServices.findUserById(user.getId()) != null) {
-						if (userByUsername!= null && userByUsername.getId() != user.getId()) {
+					if (userServices.findUserByUsername(user.getUsername()) != null) {
+						if (userByUsername!= null && !userByUsername.getAuthKey().equalsIgnoreCase(user.getAuthKey())) {
+							System.out.println("user in = "+user.getAuthKey() + "\n Query auth = "+userByUsername.getAuthKey());
+							
 							result = gson.toJson(new MessageModel("Please change username."));
-						} else if (userByEmail != null && userByEmail.getId() != user.getId()) {
+						} else if (userByEmail != null && !userByEmail.getAuthKey().equalsIgnoreCase(user.getAuthKey())) {
 							result = gson.toJson(new MessageModel("Please change email."));
 						} else {
-							result = gson.toJson(userServices.save(user));
+							userServices.save(user);
+							result = gson.toJson(new MessageModel("Success."));
 						}
 					} else {
 						result = gson.toJson(new MessageModel("no user detail."));
@@ -103,8 +107,8 @@ public class UserController {
 		return result;
 	}
 	
-	@DeleteMapping("/delete/user/{id}")
-	public String removeUser(@PathVariable long id
+	@DeleteMapping("/delete/user/{username}")
+	public String removeUser(@PathVariable String username
 			,@RequestParam(value = "authKey", required = false) String authKey) {
 		String result = null;
 		if (authKey == null) {
@@ -112,12 +116,12 @@ public class UserController {
 		} else {
 			if (userServices.checkAuthKey(authKey) != null) {
 				if (userServices.checkAuthKey(authKey).getUserType() == 1) {
-					if(userServices.findUserById(id)!=null) {
-						if(userServices.findUserById(id).getOrders().size()>0) {
+					if(userServices.findUserByUsername(username)!=null) {
+						if(userServices.findUserByUsername(username).getOrders().size()>0) {
 							result = gson.toJson(new MessageModel("User is in order please change user status."));
 						}else {
 							User user = new User();
-							user = userServices.findUserById(id);
+							user = userServices.findUserByUsername(username);
 							userServices.delete(user);
 							result = gson.toJson(new MessageModel("Success."));
 							
@@ -154,15 +158,6 @@ public class UserController {
 		}
 
 		return result;
-	}
-
-	@GetMapping("/user/id/{id}")
-	public String findUserById(@PathVariable long id) {
-		if (userServices.findUserById(id) != null) {
-			return gson.toJson(userServices.findUserById(id));
-		} else {
-			return gson.toJson(new MessageModel("User not found."));
-		}
 	}
 
 	@GetMapping("/user/username/{username}")
@@ -262,20 +257,20 @@ public class UserController {
 
 	}
 
-	@GetMapping("/user/last")
-	public String getLastUser(@RequestParam(value = "authKey", required = false) String authKey) {
-		String result = null;
-		if (authKey == null) {
-			result = new Gson().toJson(new MessageModel("Required auth key."));
-		} else {
-			if (userServices.checkAuthKey(authKey) != null) {
-				result = gson.toJson(userServices.getLastUser());
-			} else {
-				result = gson.toJson(new MessageModel("Wrong auth key."));
-			}
-		}
-		return result;
-	}
+//	@GetMapping("/user/last")
+//	public String getLastUser(@RequestParam(value = "authKey", required = false) String authKey) {
+//		String result = null;
+//		if (authKey == null) {
+//			result = new Gson().toJson(new MessageModel("Required auth key."));
+//		} else {
+//			if (userServices.checkAuthKey(authKey) != null) {
+//				result = gson.toJson(userServices.getLastUser());
+//			} else {
+//				result = gson.toJson(new MessageModel("Wrong auth key."));
+//			}
+//		}
+//		return result;
+//	}
 	
 	@PostMapping("/user/resetPassword")
 	public String resetUserPassword(@RequestBody User user) throws NoSuchAlgorithmException {
@@ -305,23 +300,23 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/user/sentResetPassword")
-	public String sentResetPasswordUrlToMail(@RequestParam(value = "email", required = false) String email) {
+	@PostMapping("/user/sentResetPassword")
+	public String sentResetPasswordUrlToMail(@RequestBody User user) {
 		String result = null;
-			if(email == null) {
+			if(user.getEmail() == null) {
 				result = new Gson().toJson(new MessageModel("Required email."));
 			}else {
-				if(userServices.findUserByEmail(email)!=null) {
+				if(userServices.findUserByEmail(user.getEmail())!=null) {
 					try{
 			            String host ="smtp.gmail.com" ;
-			            String user = "tanapone58110@gmail.com";
+			            String userMail = "tanapone58110@gmail.com";
 			            String pass = "zvaynveqfenzhvtz";
-			            String to = userServices.findUserByEmail(email).getEmail();
+			            String to = userServices.findUserByEmail(user.getEmail()).getEmail();
 			            String from = "tanapone58110@gmail.com";
 			            String subject = "ลิงค์สำหรับแก้ไขรหัสผ่าน - MiniPOS";
-			            String messageText = "ขอบคุณ คุณ "+userServices.findUserByEmail(email).getFirstName()
+			            String messageText = "ขอบคุณ คุณ "+userServices.findUserByEmail(user.getEmail()).getFirstName()
 			            		+" ที่ใช้บริการ MiniPOS นี่คือลิงค์สำหรับเปลี่ยนรหัสผ่านใหม่ "
-			            		+ ": http://localhost:4200/reset-user-password?authKey="+userServices.findUserByEmail(email).getAuthKey();
+			            		+ ": http://localhost:4200/reset-user-password?authKey="+userServices.findUserByEmail(user.getEmail()).getAuthKey();
 			            boolean sessionDebug = false;
 
 			            Properties props = System.getProperties();
@@ -343,7 +338,7 @@ public class UserController {
 			            msg.setText(messageText);
 
 			           Transport transport=mailSession.getTransport("smtp");
-			           transport.connect(host, user, pass);
+			           transport.connect(host, userMail, pass);
 			           transport.sendMessage(msg, msg.getAllRecipients());
 			           transport.close();
 			     

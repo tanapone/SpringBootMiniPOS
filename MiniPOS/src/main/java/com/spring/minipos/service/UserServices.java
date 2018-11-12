@@ -19,13 +19,8 @@ public class UserServices {
 	}
 	
 	
-	
 	public List<User> findAll(){
 		return userRepository.findAll();
-	}
-
-	public User findUserById(long id) {
-		return userRepository.findUserById(id);
 	}
 	
 	public User checkLogin(String username,String password) {
@@ -44,9 +39,9 @@ public class UserServices {
 		return userRepository.checkAuthKey(authKey);
 	}
 	
-	public User getLastUser() {
-		return userRepository.findFirstByOrderByIdDesc();
-	}
+//	public User getLastUser() {
+//		return userRepository.findFirstByOrderByIdDesc();
+//	}
 	
 	public void delete(User user) {
 		userRepository.delete(user);
